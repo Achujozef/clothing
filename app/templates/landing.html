@@ -1,0 +1,544 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}E-Shop - Premium Online Shopping{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Banner */
+    .banner-carousel {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .banner-carousel img {
+        height: 500px;
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 50%;
+        padding: 1.5rem;
+    }
+
+    /* Section Headers */
+    .section-header {
+        margin: 4rem 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--dark);
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+    
+    .section-header h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: var(--primary);
+        border-radius: 2px;
+    }
+    
+    .view-all {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .view-all:hover {
+        transform: translateX(5px);
+    }
+
+    /* Category Cards */
+    .category-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        height: 100%;
+        text-decoration: none;
+        color: var(--dark);
+        display: block;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        border-color: var(--primary);
+    }
+    
+    .category-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    .category-card h6 {
+        font-weight: 600;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    /* Product Cards */
+    .product-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        height: 100%;
+        position: relative;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+    
+    .product-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+    }
+    
+    .discount-badge {
+        position: absolute;
+        top: 1.5rem;
+        left: 1.5rem;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        padding: 0.35rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(239,68,68,0.4);
+    }
+    
+    .wishlist-btn {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: white;
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+    
+    .wishlist-btn:hover {
+        background: var(--primary);
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    .product-card h6 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        height: 40px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    
+    .product-card a {
+        text-decoration: none;
+        color: var(--dark);
+    }
+    
+    .price-section {
+        margin-bottom: 0.5rem;
+    }
+    
+    .current-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--dark);
+    }
+    
+    .original-price {
+        font-size: 0.9rem;
+        color: #9ca3af;
+        text-decoration: line-through;
+        margin-left: 0.5rem;
+    }
+    
+    .rating {
+        color: var(--accent);
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .rating-count {
+        color: #6b7280;
+        font-size: 0.85rem;
+        margin-left: 0.25rem;
+    }
+    
+    .btn-add-cart {
+        width: 100%;
+        padding: 0.65rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .btn-add-cart:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+    }
+    
+    .btn-out-stock {
+        width: 100%;
+        padding: 0.65rem;
+        background: #e5e7eb;
+        color: #6b7280;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: not-allowed;
+    }
+
+    /* Features Section */
+    .features {
+        background: white;
+        padding: 3rem 0;
+        margin: 4rem 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .feature-item {
+        text-align: center;
+        padding: 1rem;
+    }
+    
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .feature-item h5 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feature-item p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    /* Newsletter */
+    .newsletter {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 4rem 2rem;
+        border-radius: 16px;
+        margin: 4rem 0;
+        text-align: center;
+    }
+    
+    .newsletter h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+    
+    .newsletter p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+    }
+    
+    .newsletter-form {
+        max-width: 500px;
+        margin: 0 auto;
+        display: flex;
+        gap: 0.75rem;
+    }
+    
+    .newsletter-form input {
+        flex: 1;
+        padding: 0.875rem 1.25rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    
+    .newsletter-form button {
+        padding: 0.875rem 2rem;
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        white-space: nowrap;
+    }
+    
+    .newsletter-form button:hover {
+        background: #d97706;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(245,158,11,0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .banner-carousel img {
+            height: 300px;
+        }
+        
+        .section-header h2 {
+            font-size: 1.5rem;
+        }
+        
+        .newsletter h3 {
+            font-size: 1.5rem;
+        }
+        
+        .newsletter-form {
+            flex-direction: column;
+        }
+        
+        .newsletter-form button {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Banner Carousel -->
+<div class="container mt-4">
+    <div id="bannerCarousel" class="carousel slide banner-carousel" data-bs-ride="carousel">
+        {% if banners %}
+        <div class="carousel-indicators">
+            {% for banner in banners %}
+                <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="{{ forloop.counter0 }}" 
+                    class="{% if forloop.first %}active{% endif %}"></button>
+            {% endfor %}
+        </div>
+
+        <div class="carousel-inner">
+            {% for banner in banners %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                {% if banner.url %}
+                    <a href="{{ banner.url }}">
+                        <img src="{{ banner.image.url }}" class="d-block w-100" alt="{{ banner.title|default:'Banner' }}">
+                    </a>
+                {% else %}
+                    <img src="{{ banner.image.url }}" class="d-block w-100" alt="{{ banner.title|default:'Banner' }}">
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+        {% else %}
+            <p class="text-center py-5">No banners available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Features -->
+<section class="features">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-6">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h5>Free Shipping</h5>
+                    <p>On orders over $50</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h5>Secure Payment</h5>
+                    <p>100% protected</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <h5>Easy Returns</h5>
+                    <p>30-day return policy</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h5>24/7 Support</h5>
+                    <p>Dedicated support</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories -->
+<section class="container">
+    <div class="section-header d-flex justify-content-between align-items-center mb-3">
+        <h2>Shop by Category</h2>
+        <a href="/categories/" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="row g-4">
+        {% for category in categories %}
+        <div class="col-6 col-md-3">
+            <a href="{{ category.url }}" class="category-card">
+                <img src="{{ category.image_url }}" alt="{{ category.name }}">
+                <h6>{{ category.name }}</h6>
+            </a>
+        </div>
+        {% empty %}
+        <p class="text-center">No categories available.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- New Arrivals -->
+<section class="container">
+    <div class="section-header d-flex justify-content-between align-items-center mb-3">
+        <h2>New Arrivals</h2>
+        <a href="/products/new/" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="row g-4">
+        {% for product in new_arrivals %}
+        <div class="col-6 col-md-3">
+            <div class="product-card">
+                {% if product.discount_percent > 0 %}
+                <div class="discount-badge">-{{ product.discount_percent }}%</div>
+                {% endif %}
+                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                <a href="{{ product.url }}">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                    <h6>{{ product.name }}</h6>
+                    <div class="price-section">
+                        <span class="current-price">₹{{ product.price }}</span>
+                        {% if product.mrp > product.price %}
+                        <span class="original-price">₹{{ product.mrp }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="rating">
+                        {% for _ in product.stars_full %}
+                            <i class="fas fa-star"></i>
+                        {% endfor %}
+                        {% for _ in product.stars_half %}
+                            <i class="fas fa-star-half-alt"></i>
+                        {% endfor %}
+                        {% for _ in product.stars_empty %}
+                            <i class="far fa-star"></i>
+                        {% endfor %}
+                    </div>
+                </a>
+                <button class="btn-add-cart" {% if not product.in_stock %}disabled{% endif %}>Add to Cart</button>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No new arrivals available.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Newsletter -->
+<div class="container">
+    <section class="newsletter">
+        <h3>Subscribe & Get 10% Off</h3>
+        <p>Join our newsletter and be the first to know about exclusive deals and new arrivals</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email address" required>
+            <button type="submit">Subscribe Now</button>
+        </form>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add to cart functionality
+    document.querySelectorAll('.btn-add-cart').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.innerHTML = '<i class="fas fa-check"></i> Added!';
+            this.style.background = '#10b981';
+            setTimeout(() => {
+                this.innerHTML = 'Add to Cart';
+                this.style.background = '';
+            }, 2000);
+        });
+    });
+
+    // Wishlist toggle
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const icon = this.querySelector('i');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+            if (icon.classList.contains('fas')) {
+                this.style.color = '#ef4444';
+            } else {
+                this.style.color = '';
+            }
+        });
+    });
+</script>
+{% endblock %}
