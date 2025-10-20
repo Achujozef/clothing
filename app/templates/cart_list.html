@@ -4,249 +4,84 @@
 {% block title %}My Cart — Ecomix{% endblock %}
 
 {% block extra_css %}
-<style>
-:root {
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --accent: #f59e0b;
-  --danger: #ef4444;
-  --border: #e5e7eb;
-  --light: #f9fafb;
-  --dark: #111827;
-  --radius: 12px;
-}
-
-body { background: var(--light); }
-
-.cart-page {
-  padding: 1rem;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* 🛍️ Cart item layout */
-.cart-item {
-  display: grid;
-  grid-template-columns: 75px 1fr 80px;
-  gap: 0.75rem;
-  background: white;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 0.9rem;
-  align-items: center;
-  margin-bottom: 0.8rem;
-}
-
-.item-image {
-  width: 75px;
-  height: 80px;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-.item-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.item-name {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--dark);
-  text-decoration: none;
-  line-height: 1.3;
-}
-
-.item-price {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--primary-dark);
-}
-
-/* ➕➖ Quantity + Remove */
-.item-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.quantity-controls {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.quantity-btn {
-  width: 30px;
-  height: 30px;
-  border: none;
-  background: white;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.quantity-btn:hover { background: var(--light); }
-.quantity-display {
-  width: 35px;
-  border: none;
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.btn-remove {
-  background: transparent;
-  color: var(--danger);
-  border: 1px solid var(--danger);
-  border-radius: 6px;
-  font-size: 0.7rem;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-}
-.btn-remove:hover { background: var(--danger); color: white; }
-
-/* 🧾 Summary */
-.cart-summary {
-  background: white;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 1rem;
-  margin-top: 1.5rem;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.4rem 0;
-  font-size: 0.9rem;
-}
-
-.summary-row.total {
-  font-weight: 700;
-  font-size: 1rem;
-  border-top: 1px dashed var(--border);
-  margin-top: 0.4rem;
-  padding-top: 0.8rem;
-}
-
-.btn-checkout {
-  display: block;
-  width: 100%;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem;
-  font-size: 1rem;
-  font-weight: 600;
-  margin-top: 1rem;
-  text-align: center;
-  text-decoration: none;
-  transition: background 0.3s;
-}
-
-.btn-checkout:hover {
-  background: var(--primary-dark);
-}
-
-/* 🖥️ Desktop improvements */
-@media (min-width: 768px) {
-  .cart-item {
-    grid-template-columns: 120px 1fr 120px;
-    padding: 1.25rem;
-  }
-  .item-image { width: 110px; height: 110px; }
-  .item-name { font-size: 1rem; }
-  .item-price { font-size: 0.95rem; }
-  .quantity-btn { width: 34px; height: 34px; }
-  .btn-remove { font-size: 0.8rem; padding: 0.4rem 0.7rem; }
-}
-</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
-<div class="cart-page">
-  <h2 class="fw-semibold mb-3">🛒 My Shopping Cart</h2>
+<div class="container py-4" style="max-width:900px;">
+    <h2 class="fw-semibold mb-4">🛒 My Shopping Cart</h2>
 
-  {% if items %}
-    {% for item in items %}
-    <div class="cart-item">
-      <!-- 🖼️ Product image -->
-      {% if item.variant.product.images.first %}
-        <img src="{{ item.variant.product.images.first.image.url }}" alt="{{ item.variant.product.name }}" class="item-image">
-      {% else %}
-        <img src="{% static 'images/no-image.jpg' %}" alt="{{ item.variant.product.name }}" class="item-image">
-      {% endif %}
+    {% if items %}
+        {% for item in items %}
+        <div class="d-flex align-items-center bg-white border rounded mb-3 p-3" style="gap:0.75rem;">
+            <!-- Product Image -->
+            <div style="flex-shrink:0;">
+                {% if item.variant.product.images.first %}
+                    <img src="{{ item.variant.product.images.first.image.url }}" alt="{{ item.variant.product.name }}" class="rounded" style="width:75px; height:80px; object-fit:cover;">
+                {% else %}
+                    <img src="{% static 'images/no-image.jpg' %}" alt="{{ item.variant.product.name }}" class="rounded" style="width:75px; height:80px; object-fit:cover;">
+                {% endif %}
+            </div>
 
-      <!-- 📄 Product details -->
-      <div class="item-details">
-        <a href="{% url 'product_detail' item.variant.product.slug %}" class="item-name">{{ item.variant.product.name }}</a>
-        <div class="item-price">₹{{ item.variant.price }}</div>
-      </div>
+            <!-- Product Details -->
+            <div class="flex-grow-1 d-flex flex-column justify-content-center">
+                <a href="{% url 'product_detail' item.variant.product.slug %}" class="text-dark fw-semibold text-decoration-none" style="line-height:1.3; font-size:0.9rem;">{{ item.variant.product.name }}</a>
+                <div class="text-primary fw-bold" style="font-size:0.85rem;">₹{{ item.variant.price }}</div>
+            </div>
 
-      <!-- 🔢 Quantity + Remove -->
-      <div class="item-actions">
-        <form method="post" action="{% url 'update_cart_quantity' item.id %}">
-          {% csrf_token %}
-          <div class="quantity-controls">
-            <button type="submit" name="action" value="decrease" class="quantity-btn" {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
-            <input type="text" value="{{ item.quantity }}" class="quantity-display" readonly>
-            <button type="submit" name="action" value="increase" class="quantity-btn" {% if item.quantity >= item.variant.available_stock %}disabled{% endif %}>+</button>
-          </div>
-        </form>
+            <!-- Quantity & Remove -->
+            <div class="d-flex flex-column align-items-center" style="gap:0.4rem;">
+                <form method="post" action="{% url 'update_cart_quantity' item.id %}">
+                    {% csrf_token %}
+                    <div class="d-flex border rounded overflow-hidden" style="align-items:center;">
+                        <button type="submit" name="action" value="decrease" class="btn btn-light p-0" style="width:30px; height:30px;" {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
+                        <input type="text" value="{{ item.quantity }}" class="form-control text-center border-0 p-0" style="width:35px; font-size:0.9rem; font-weight:600;" readonly>
+                        <button type="submit" name="action" value="increase" class="btn btn-light p-0" style="width:30px; height:30px;" {% if item.quantity >= item.variant.available_stock %}disabled{% endif %}>+</button>
+                    </div>
+                </form>
+                <form method="post" action="{% url 'remove_cart_item' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm mt-1" onclick="return confirm('Remove this item?')">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
 
-        <form method="post" action="{% url 'remove_cart_item' item.id %}">
-          {% csrf_token %}
-          <button type="submit" class="btn-remove" onclick="return confirm('Remove this item?')">
-            <i class="fas fa-trash"></i> Remove
-          </button>
-        </form>
-      </div>
-    </div>
-    {% endfor %}
+        <!-- Cart Summary -->
+        <div class="bg-white border rounded p-3 mt-4">
+            <div class="d-flex justify-content-between py-1">
+                <span>Subtotal</span>
+                <span>₹{{ subtotal }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-1">
+                <span>Shipping</span>
+                {% if shipping == 0 %}
+                    <span class="text-success">Free</span>
+                {% else %}
+                    <span>₹{{ shipping }}</span>
+                {% endif %}
+            </div>
+            {% if discount > 0 %}
+            <div class="d-flex justify-content-between py-1">
+                <span>Discount</span>
+                <span class="text-success">− ₹{{ discount }}</span>
+            </div>
+            {% endif %}
+            <div class="d-flex justify-content-between py-2 border-top mt-2 fw-bold">
+                <span>Total</span>
+                <span>₹{{ total }}</span>
+            </div>
 
-    <!-- 🧾 Cart Summary -->
-    <div class="cart-summary">
-      <div class="summary-row">
-        <span>Subtotal</span>
-        <span>₹{{ subtotal }}</span>
-      </div>
-      <div class="summary-row">
-        <span>Shipping</span>
-        {% if shipping == 0 %}
-          <span class="text-success">Free</span>
-        {% else %}
-          <span>₹{{ shipping }}</span>
-        {% endif %}
-      </div>
-      {% if discount > 0 %}
-      <div class="summary-row">
-        <span>Discount</span>
-        <span class="text-success">− ₹{{ discount }}</span>
-      </div>
-      {% endif %}
-      <div class="summary-row total">
-        <span>Total</span>
-        <span>₹{{ total }}</span>
-      </div>
-
-      <a href="" class="btn-checkout">Proceed to Checkout</a>
-    </div>
-  {% else %}
-    <div class="text-center py-5">
-      <i class="fas fa-shopping-cart fa-3x mb-3 text-secondary"></i>
-      <h5>Your cart is empty</h5>
-      <a href="/" class="btn btn-primary mt-3">Continue Shopping</a>
-    </div>
-  {% endif %}
+            <a href="" class="btn btn-primary w-100 mt-3">Proceed to Checkout</a>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-3x mb-3 text-secondary"></i>
+            <h5>Your cart is empty</h5>
+            <a href="/" class="btn btn-primary mt-3">Continue Shopping</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

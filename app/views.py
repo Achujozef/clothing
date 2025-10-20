@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -10,6 +11,11 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
+from .models import Product, ProductVariant, Category
+
 
 
 class UserRegisterView(View):
@@ -124,7 +130,7 @@ class LandingPageView(View):
             img_url = first_product.images.first().image.url if first_product and first_product.images.exists() else "/static/images/placeholder.png"
             categories_data.append({
                 "name": cat.name,
-                "url": f"/category/{cat.slug}/",
+                "url": f"{reverse('product_list')}?category={cat.slug}",
                 "image_url": img_url
             })
 
@@ -165,9 +171,16 @@ class LandingPageView(View):
 
 
 
+
 def product_list(request):
-    # Base queryset
+    # --- Category filter ---
+    category_slug = request.GET.get("category")
+    category = None
     products = Product.objects.filter(is_active=True).prefetch_related("variants", "images")
+
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
+        products = products.filter(category=category)
 
     # --- Search ---
     query = request.GET.get("q", "")
@@ -178,7 +191,7 @@ def product_list(request):
             Q(category__name__icontains=query)
         )
 
-    # --- Filter ---
+    # --- Filter by color / size ---
     color = request.GET.getlist("color")
     size = request.GET.getlist("size")
 
@@ -187,7 +200,7 @@ def product_list(request):
     if size:
         products = products.filter(variants__size__in=size)
 
-    # --- Sort ---
+    # --- Sorting ---
     sort = request.GET.get("sort", "newest")
     if sort == "price_low":
         products = products.order_by("variants__price")
@@ -205,7 +218,7 @@ def product_list(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    # Unique filter values
+    # --- Unique filter values for sidebar ---
     available_colors = ProductVariant.objects.values_list("color", flat=True).distinct()
     available_sizes = ProductVariant.objects.values_list("size", flat=True).distinct()
 
@@ -213,9 +226,11 @@ def product_list(request):
         "page_obj": page_obj,
         "query": query,
         "sort": sort,
+        "category": category,
         "available_colors": [c for c in available_colors if c],
         "available_sizes": [s for s in available_sizes if s],
     }
+
     return render(request, "product_list.html", context)
 
 
@@ -259,7 +274,47 @@ def product_detail(request, slug):
     }
     return render(request, "product_detail.html", context)
 
-from django.contrib.auth.decorators import login_required
+@login_required
+def category_product_list_view(request):
+    # Fetch all active categories
+    categories = Category.objects.filter(is_active=True).order_by('sort_order')
+
+    # For each category, prefetch latest 50 products
+    categories_with_products = []
+    for cat in categories:
+        latest_products = (
+            cat.products.filter(is_active=True)
+            .select_related("category")
+            .prefetch_related("images", "variants")
+            .order_by("-created_at")[:50]
+        )
+        categories_with_products.append({
+            "category": cat,
+            "products": latest_products,
+        })
+
+    # -------------------------
+    # Fetch Cart and Wishlist
+    # -------------------------
+    cart_items = []
+    wishlist_items = []
+
+    cart = Cart.objects.filter(user=request.user, is_active=True).first()
+    if cart:
+        cart_items = CartItem.objects.filter(cart=cart).select_related("variant__product", "variant")
+
+    wishlist = Wishlist.objects.filter(user=request.user).first()
+    if wishlist:
+        wishlist_items = WishlistItem.objects.filter(wishlist=wishlist).select_related("variant__product", "variant")
+
+    context = {
+        "categories_with_products": categories_with_products,
+        "cart_items": cart_items,
+        "wishlist_items": wishlist_items,
+    }
+    return render(request, "category_product_list.html", context)
+
+
 @login_required
 def cart_view(request):
     """

@@ -4,204 +4,14 @@
 {% block title %}Shop - Products{% endblock %}
 
 {% block extra_css %}
-<style>
-    .filters {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        border: 1px solid var(--border);
-    }
-
-    .form-select, .form-control {
-        border-radius: 8px;
-        border: 2px solid var(--border);
-        padding: 0.65rem 1rem;
-        transition: border-color 0.3s;
-    }
-    
-    .form-select:focus, .form-control:focus {
-        border-color: var(--primary);
-        box-shadow: none;
-    }
-
-    .product-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1rem;
-        transition: all 0.3s ease;
-        border: 1px solid var(--border);
-        height: 100%;
-        position: relative;
-    }
-
-    .product-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-    }
-
-    .product-card img {
-        width: 100%;
-        height: 220px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 0.75rem;
-    }
-
-    .discount-badge {
-        position: absolute;
-        top: 1.5rem;
-        left: 1.5rem;
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        color: white;
-        padding: 0.35rem 0.75rem;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        box-shadow: 0 2px 8px rgba(239,68,68,0.4);
-    }
-
-    .wishlist-btn {
-        position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
-        background: white;
-        border: none;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        transition: all 0.3s;
-    }
-
-    .wishlist-btn:hover {
-        background: var(--primary);
-        color: white;
-        transform: scale(1.1);
-    }
-
-    .product-card h6 {
-        font-size: 0.95rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        height: 40px;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-    }
-
-    .product-card a {
-        text-decoration: none;
-        color: var(--dark);
-    }
-
-    .price-section {
-        margin-bottom: 0.75rem;
-    }
-
-    .current-price {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--dark);
-    }
-
-    .original-price {
-        font-size: 0.9rem;
-        color: #9ca3af;
-        text-decoration: line-through;
-        margin-left: 0.5rem;
-    }
-
-    .btn-add-cart {
-        width: 100%;
-        padding: 0.65rem;
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s;
-        cursor: pointer;
-    }
-
-    .btn-add-cart:hover {
-        background: var(--primary-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(37,99,235,0.3);
-    }
-
-    .btn-add-cart:disabled {
-        background: #e5e7eb;
-        color: #6b7280;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    .btn-filter {
-        background: var(--dark);
-        color: white;
-        border: none;
-        padding: 0.65rem 1.5rem;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s;
-        cursor: pointer;
-    }
-
-    .btn-filter:hover {
-        background: #111827;
-    }
-
-    .pagination {
-        margin-top: 3rem;
-    }
-
-    .page-link {
-        color: var(--primary);
-        border: 1px solid var(--border);
-        padding: 0.5rem 0.85rem;
-        margin: 0 0.25rem;
-        border-radius: 8px;
-        transition: all 0.3s;
-    }
-
-    .page-link:hover {
-        background: var(--primary);
-        color: white;
-        border-color: var(--primary);
-    }
-
-    .page-item.active .page-link {
-        background: var(--primary);
-        border-color: var(--primary);
-    }
-
-    @media (max-width: 768px) {
-        .filters {
-            padding: 1rem;
-        }
-        
-        .col-6 {
-            padding: 0 6px;
-        }
-        
-        .product-card {
-            padding: 8px;
-        }
-    }
-</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
 <div class="container py-4">
+
     <!-- Filters & Search -->
-    <div class="filters">
+    <div class="bg-white rounded shadow-sm p-4 mb-4 border">
         <form method="get" class="row g-3 align-items-end">
             <div class="col-md-3 col-12">
                 <label class="form-label fw-semibold">Search</label>
@@ -235,7 +45,7 @@
                 </select>
             </div>
             <div class="col-md-3 col-6 d-grid">
-                <button type="submit" class="btn-filter">
+                <button type="submit" class="btn btn-dark fw-semibold">
                     <i class="fas fa-filter me-2"></i>Apply Filters
                 </button>
             </div>
@@ -243,83 +53,92 @@
     </div>
 
     <!-- Product Grid -->
-    <section>
-        <div class="row g-4">
-            {% for product in page_obj %}
-            <div class="col-6 col-md-3">
-                <div class="product-card">
-                    {% with variant=product.main_variant %}
-                        {% if variant.discount_percent > 0 %}
-                        <div class="discount-badge">-{{ variant.discount_percent }}%</div>
-                        {% endif %}
-                        <button class="wishlist-btn"><i class="far fa-heart"></i></button>
-                        <a href="{{ product.get_absolute_url }}">
-                            {% if product.images.first %}
-                                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
-                            {% else %}
-                                <img src="{% static 'images/no-image.jpg' %}" alt="{{ product.name }}">
-                            {% endif %}
-                            <h6>{{ product.name }}</h6>
-                            <div class="price-section">
-                                <span class="current-price">₹{{ variant.discounted_price }}</span>
-                                {% if variant.mrp > variant.price %}
-                                    <span class="original-price">₹{{ variant.mrp }}</span>
-                                {% endif %}
-                            </div>
-                        </a>
-                        <button class="btn-add-cart" {% if variant.available_stock <= 0 %}disabled{% endif %}>
-                            {% if variant.available_stock <= 0 %}Out of Stock{% else %}Add to Cart{% endif %}
-                        </button>
-                    {% endwith %}
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12">
-                <div class="text-center py-5">
-                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">No products found matching your criteria.</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+    <div class="row g-4">
+        {% for product in page_obj %}
+        <div class="col-6 col-md-3">
+            <div class="bg-white rounded shadow-sm border position-relative h-100 d-flex flex-column">
+                {% with variant=product.main_variant %}
+                    {% if variant.discount_percent > 0 %}
+                        <div class="position-absolute top-0 start-0 m-3 px-2 py-1 rounded text-white fw-bold" 
+                             style="background: linear-gradient(135deg,#ef4444,#dc2626); font-size:0.85rem; box-shadow:0 2px 8px rgba(239,68,68,0.4);">
+                            -{{ variant.discount_percent }}%
+                        </div>
+                    {% endif %}
 
-        <!-- Pagination -->
-        {% if page_obj.paginator.num_pages > 1 %}
-        <div class="d-flex justify-content-center">
-            <nav>
-                <ul class="pagination">
-                    {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
-                            <i class="fas fa-chevron-left"></i>
-                        </a>
-                    </li>
-                    {% endif %}
-                    
-                    {% for page_num in page_obj.paginator.page_range %}
-                        {% if page_num == page_obj.number %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ page_num }}</span>
-                            </li>
-                        {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">{{ page_num }}</a>
-                            </li>
+                    <button class="wishlist-btn position-absolute top-0 end-0 m-3 bg-white border rounded-circle d-flex align-items-center justify-content-center" 
+                            style="width:36px;height:36px;box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:pointer;">
+                        <i class="far fa-heart"></i>
+                    </button>
+
+                    <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-dark flex-grow-1 d-flex flex-column">
+                        {% if product.images.first %}
+                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-100 rounded mb-2" style="height:220px; object-fit:cover;">
+                        {% else %}
+                            <img src="{% static 'images/no-image.jpg' %}" alt="{{ product.name }}" class="w-100 rounded mb-2" style="height:220px; object-fit:cover;">
                         {% endif %}
-                    {% endfor %}
-                    
-                    {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
+
+                        <h6 class="fw-semibold mb-1" style="height:40px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
+                            {{ product.name }}
+                        </h6>
+
+                        <div class="mb-2">
+                            <span class="fw-bold fs-5">₹{{ variant.discounted_price }}</span>
+                            {% if variant.mrp > variant.price %}
+                                <span class="text-muted text-decoration-line-through ms-1">₹{{ variant.mrp }}</span>
+                            {% endif %}
+                        </div>
+                    </a>
+
+                    <button class="btn btn-primary mt-auto fw-semibold" {% if variant.available_stock <= 0 %}disabled{% endif %}>
+                        {% if variant.available_stock <= 0 %}Out of Stock{% else %}Add to Cart{% endif %}
+                    </button>
+                {% endwith %}
+            </div>
         </div>
-        {% endif %}
-    </section>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No products found matching your criteria.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="d-flex justify-content-center mt-5">
+        <nav>
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for page_num in page_obj.paginator.page_range %}
+                    {% if page_num == page_obj.number %}
+                        <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                    {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">{{ page_num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -332,24 +151,22 @@
             const icon = this.querySelector('i');
             icon.classList.toggle('far');
             icon.classList.toggle('fas');
-            if (icon.classList.contains('fas')) {
-                this.style.color = '#ef4444';
-            } else {
-                this.style.color = '';
-            }
+            this.style.color = icon.classList.contains('fas') ? '#ef4444' : '';
         });
     });
 
-    // Add to cart functionality
-    document.querySelectorAll('.btn-add-cart:not(:disabled)').forEach(btn => {
+    // Add to cart feedback
+    document.querySelectorAll('.btn-primary:not(:disabled)').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             const originalText = this.innerHTML;
             this.innerHTML = '<i class="fas fa-check"></i> Added!';
-            this.style.background = '#10b981';
+            this.classList.remove('btn-primary');
+            this.classList.add('btn-success');
             setTimeout(() => {
                 this.innerHTML = originalText;
-                this.style.background = '';
+                this.classList.remove('btn-success');
+                this.classList.add('btn-primary');
             }, 2000);
         });
     });
