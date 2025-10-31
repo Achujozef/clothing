@@ -1,0 +1,145 @@
+@media (max-width: 768px) {
+    #bannerCarousel { height: 250px !important; }
+    #bannerCarousel .carousel-control-prev,
+    #bannerCarousel .carousel-control-next { width:30px; height:30px; }
+    #bannerCarousel .carousel-control-prev-icon,
+    #bannerCarousel .carousel-control-next-icon { padding:6px; }
+}
+@media (max-width: 480px) {
+    #bannerCarousel { height:180px !important; }
+}
+
+/* Global Theme Variables */
+:root {
+    --primary: #0d6efd;
+    --primary-dark: #0b5ed7;
+    --secondary: #6c757d;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --dark: #1f2937;
+    --light: #f9fafb;
+    --brand: #2c2c2c;
+    --accent: #e8c1a0;
+    --text-dark: #222222;
+    --muted: #7d7d7d;
+    --input-border: #dcdcdc;
+
+    /* Semantic surfaces/text */
+    --bg: #f9fafb;
+    --bg-surface: #ffffff;
+    --bg-elevated: #ffffff;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --text-rgb: 17, 24, 39;
+}
+
+/* Global base tweaks */
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* Reusable animations/utilities */
+.fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* Theme palettes */
+/* Classic Opulence — Black, Cream/White, Gold */
+[data-theme="classic-opulence"] {
+    --primary: #C9A227; /* gold */
+    --primary-dark: #A6851E;
+    --dark: #111111; /* black */
+    --light: #ffffff; /* white/cream base */
+    --brand: #111111;
+    --accent: #C9A227; /* gold accent */
+    --text-dark: #111111;
+    --bg: #ffffff;
+    --bg-surface: #ffffff;
+    --bg-elevated: #ffffff;
+    --text: #111111;
+    --text-muted: #6b6b6b;
+    --border: #e6e6e6;
+    --text-rgb: 17, 17, 17;
+}
+
+/* Modern Prestige — Charcoal Gray, White, Silver, Deep Red (accent) */
+[data-theme="modern-prestige"] {
+    --primary: #B0B7C3; /* silver-ish for UI accents */
+    --primary-dark: #8E97A4;
+    --dark: #2B2F36; /* charcoal */
+    --light: #ffffff; /* white */
+    --brand: #2B2F36;
+    --accent: #8B1E2D; /* deep red */
+    --text-dark: #1F2328;
+    --bg: #f5f7fa;
+    --bg-surface: #ffffff;
+    --bg-elevated: #ffffff;
+    --text: #1F2328;
+    --text-muted: #646c76;
+    --border: #e6e9ef;
+    --text-rgb: 31, 35, 40;
+}
+
+/* Regal & Rich — Deep Navy Blue, Warm Beige/Taupe, Gold */
+[data-theme="regal-rich"] {
+    --primary: #0B3D91; /* deep navy */
+    --primary-dark: #082E6D;
+    --dark: #0A1224; /* deep tone */
+    --light: #EFE7DB; /* warm beige/taupe */
+    --brand: #0B3D91;
+    --accent: #C9A227; /* gold */
+    --text-dark: #0A1224;
+    --bg: #EFE7DB;
+    --bg-surface: #ffffff;
+    --bg-elevated: #ffffff;
+    --text: #0A1224;
+    --text-muted: #6b6256;
+    --border: #e2d9cc;
+    --text-rgb: 10, 18, 36;
+}
+
+/* Natural Elegance — Emerald/Forest Green, Soft Beige/Cream, Rose Gold/Copper */
+[data-theme="natural-elegance"] {
+    --primary: #166534; /* forest green */
+    --primary-dark: #0f3f21;
+    --dark: #13301D;
+    --light: #FAF7F2; /* soft beige/cream */
+    --brand: #166534;
+    --accent: #B76E79; /* rose gold */
+    --text-dark: #1b1b1b;
+    --bg: #FAF7F2;
+    --bg-surface: #ffffff;
+    --bg-elevated: #ffffff;
+    --text: #1b1b1b;
+    --text-muted: #6f6a64;
+    --border: #eadfd2;
+    --text-rgb: 27, 27, 27;
+}
+
+/* Global component overrides to use theme vars */
+.navbar.bg-white { background-color: var(--bg-surface) !important; }
+.navbar .nav-link { color: var(--text) !important; }
+.navbar .nav-link:hover { color: var(--primary) !important; }
+
+.btn-primary { background-color: var(--primary) !important; border-color: var(--primary) !important; }
+.btn-primary:hover, .btn-primary:focus { background-color: var(--primary-dark) !important; border-color: var(--primary-dark) !important; }
+
+.text-dark { color: var(--text) !important; }
+.text-muted { color: var(--text-muted) !important; }
+
+.border { border-color: var(--border) !important; }
+.bg-light { background-color: var(--bg) !important; }
+.bg-white { background-color: var(--bg-surface) !important; }
+.card, .shadow-sm { background-color: var(--bg-elevated); }
+
+

@@ -1,0 +1,104 @@
+/* Hero Carousel */
+.hero-img {
+  height: 600px;
+  object-fit: cover;
+  filter: brightness(0.85);
+}
+
+.hero-caption {
+  bottom: 30%;
+  color: #fff;
+  text-align: left;
+  left: 5%;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+.hero-caption h1 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.btn-accent {
+  background: #ff6b6b;
+  color: #fff;
+  border-radius: 50px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-accent:hover {
+  background: #ff4757;
+  color: #fff;
+}
+
+/* Sections */
+.section-title {
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-size: 2rem;
+  color: #222;
+}
+
+/* Category Cards */
+.category-card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.95);
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.category-card img {
+  height: 180px;
+  object-fit: cover;
+}
+
+/* Product Cards */
+.product-card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.95);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.product-img-wrapper {
+  overflow: hidden;
+  border-radius: 15px 15px 0 0;
+}
+
+.product-img {
+  transition: transform 0.3s;
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.05);
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.product-price {
+  font-size: 0.95rem;
+}
+
+.product-price del {
+  margin-left: 0.5rem;
+  color: #888;
+}

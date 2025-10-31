@@ -5,20 +5,29 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{% static 'css/product_list.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=DM+Serif+Display:wght@400&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container py-5">
 
     <!-- Filters & Search -->
-    <div class="bg-white rounded shadow-sm p-4 mb-4 border">
-        <form method="get" class="row g-3 align-items-end">
-            <div class="col-md-3 col-12">
-                <label class="form-label fw-semibold">Search</label>
-                <input type="text" name="q" class="form-control" placeholder="Search products..." value="{{ query }}">
+    <div class="filter-modern-card mb-6">
+        <form method="get" class="row g-4 align-items-end">
+            <div class="col-lg-3 col-md-4 col-12">
+                <label class="form-label">Search</label>
+                <input 
+                    type="text" 
+                    name="q" 
+                    class="form-control" 
+                    placeholder="Search products..." 
+                    value="{{ query }}" 
+                    autocomplete="off"
+                >
             </div>
-            <div class="col-md-2 col-6">
-                <label class="form-label fw-semibold">Sort By</label>
+            <div class="col-lg-2 col-md-3 col-6">
+                <label class="form-label">Sort By</label>
                 <select name="sort" class="form-select" onchange="this.form.submit()">
                     <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
                     <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
@@ -26,8 +35,8 @@
                     <option value="name" {% if sort == 'name' %}selected{% endif %}>Name</option>
                 </select>
             </div>
-            <div class="col-md-2 col-6">
-                <label class="form-label fw-semibold">Color</label>
+            <div class="col-lg-2 col-md-3 col-6">
+                <label class="form-label">Color</label>
                 <select name="color" class="form-select" onchange="this.form.submit()">
                     <option value="">All Colors</option>
                     {% for c in available_colors %}
@@ -35,8 +44,8 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-2 col-6">
-                <label class="form-label fw-semibold">Size</label>
+            <div class="col-lg-2 col-md-3 col-6">
+                <label class="form-label">Size</label>
                 <select name="size" class="form-select" onchange="this.form.submit()">
                     <option value="">All Sizes</option>
                     {% for s in available_sizes %}
@@ -44,8 +53,8 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-3 col-6 d-grid">
-                <button type="submit" class="btn btn-dark fw-semibold">
+            <div class="col-lg-3 col-md-12 col-12 d-grid pt-2 pt-lg-0">
+                <button type="submit" class="btn btn-filter-elevated">
                     <i class="fas fa-filter me-2"></i>Apply Filters
                 </button>
             </div>
@@ -53,53 +62,54 @@
     </div>
 
     <!-- Product Grid -->
-    <div class="row g-4">
+    <div class="premium-grid">
         {% for product in page_obj %}
-        <div class="col-6 col-md-3">
-            <div class="bg-white rounded shadow-sm border position-relative h-100 d-flex flex-column">
+        <div>
+            <div class="elevated-card fade-in">
                 {% with variant=product.main_variant %}
                     {% if variant.discount_percent > 0 %}
-                        <div class="position-absolute top-0 start-0 m-3 px-2 py-1 rounded text-white fw-bold" 
-                             style="background: linear-gradient(135deg,#ef4444,#dc2626); font-size:0.85rem; box-shadow:0 2px 8px rgba(239,68,68,0.4);">
+                        <div class="discount-badge">
                             -{{ variant.discount_percent }}%
                         </div>
                     {% endif %}
 
-                    <button class="wishlist-btn position-absolute top-0 end-0 m-3 bg-white border rounded-circle d-flex align-items-center justify-content-center" 
-                            style="width:36px;height:36px;box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:pointer;">
+                    <button class="wishlist-btn" title="Add to wishlist">
                         <i class="far fa-heart"></i>
                     </button>
 
-                    <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-dark flex-grow-1 d-flex flex-column">
+                    <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-dark flex-grow-1 d-flex flex-column" style="text-decoration:none;">
+                        <div class="product-image-container">
                         {% if product.images.first %}
-                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-100 rounded mb-2" style="height:220px; object-fit:cover;">
+                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
                         {% else %}
-                            <img src="{% static 'images/no-image.jpg' %}" alt="{{ product.name }}" class="w-100 rounded mb-2" style="height:220px; object-fit:cover;">
+                            <img src="{% static 'images/no-image.jpg' %}" alt="{{ product.name }}">
                         {% endif %}
-
-                        <h6 class="fw-semibold mb-1" style="height:40px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
-                            {{ product.name }}
-                        </h6>
-
-                        <div class="mb-2">
-                            <span class="fw-bold fs-5">₹{{ variant.discounted_price }}</span>
-                            {% if variant.mrp > variant.price %}
-                                <span class="text-muted text-decoration-line-through ms-1">₹{{ variant.mrp }}</span>
-                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1 px-3 pt-2 d-flex flex-column">
+                            <div class="card-product-title">{{ product.name }}</div>
+                            <div class="card-footer-box mb-1">
+                                <span class="card-product-price">₹{{ variant.discounted_price }}</span>
+                                {% if variant.mrp > variant.price %}
+                                    <span class="card-product-mrp">₹{{ variant.mrp }}</span>
+                                {% endif %}
+                            </div>
                         </div>
                     </a>
 
-                    <button class="btn btn-primary mt-auto fw-semibold" {% if variant.available_stock <= 0 %}disabled{% endif %}>
-                        {% if variant.available_stock <= 0 %}Out of Stock{% else %}Add to Cart{% endif %}
-                    </button>
+                    <div class="px-3">
+                        <button class="btn btn-elevated-primary w-100 fw-semibold mt-1"
+                            {% if variant.available_stock <= 0 %}disabled{% endif %}>
+                            {% if variant.available_stock <= 0 %}Out of Stock{% else %}Add to Cart{% endif %}
+                        </button>
+                    </div>
                 {% endwith %}
             </div>
         </div>
         {% empty %}
         <div class="col-12">
-            <div class="text-center py-5">
-                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                <p class="text-muted">No products found matching your criteria.</p>
+            <div class="empty-products-state text-center mt-4 mb-5">
+                <i class="fas fa-inbox fa-3x mb-3"></i>
+                <p class="text-muted mt-2">No products found matching your criteria.</p>
             </div>
         </div>
         {% endfor %}
@@ -107,12 +117,12 @@
 
     <!-- Pagination -->
     {% if page_obj.paginator.num_pages > 1 %}
-    <div class="d-flex justify-content-center mt-5">
+    <div class="premium-pagination d-flex justify-content-center mt-5 mb-2">
         <nav>
-            <ul class="pagination">
+            <ul class="pagination align-items-center">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" aria-label="Previous">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 </li>
@@ -130,7 +140,7 @@
 
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" aria-label="Next">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </li>
@@ -144,6 +154,13 @@
 
 {% block extra_js %}
 <script>
+    // Fade-in cards after DOM load
+    window.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.elevated-card').forEach(card => {
+            card.classList.add('fade-in');
+        });
+    });
+
     // Wishlist toggle
     document.querySelectorAll('.wishlist-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
@@ -152,22 +169,26 @@
             icon.classList.toggle('far');
             icon.classList.toggle('fas');
             this.style.color = icon.classList.contains('fas') ? '#ef4444' : '';
+            this.classList.toggle('wish-active');
         });
     });
 
-    // Add to cart feedback
-    document.querySelectorAll('.btn-primary:not(:disabled)').forEach(btn => {
+    // Add to cart feedback with animation
+    document.querySelectorAll('.btn-elevated-primary:not(:disabled)').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             const originalText = this.innerHTML;
             this.innerHTML = '<i class="fas fa-check"></i> Added!';
-            this.classList.remove('btn-primary');
             this.classList.add('btn-success');
+            this.classList.remove('btn-elevated-primary');
+            this.style.transition = 'background 0.26s, box-shadow 0.21s, transform 0.17s';
+            this.style.background = 'linear-gradient(90deg,#48bb78 63%,#38a168 100%)';
             setTimeout(() => {
                 this.innerHTML = originalText;
                 this.classList.remove('btn-success');
-                this.classList.add('btn-primary');
-            }, 2000);
+                this.classList.add('btn-elevated-primary');
+                this.style.background = '';
+            }, 1500);
         });
     });
 </script>

@@ -4,269 +4,13 @@
 {% block title %}E-Shop - Premium Online Shopping{% endblock %}
 
 {% block extra_css %}
-<style>
-    /* Premium Typography & Colors */
-    :root {
-        --primary: #0d6efd;
-        --primary-dark: #0b5ed7;
-        --secondary: #6c757d;
-        --success: #10b981;
-        --danger: #ef4444;
-        --warning: #f59e0b;
-        --dark: #1f2937;
-        --light: #f9fafb;
-    }
-
-    body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        color: var(--dark);
-        background: var(--light);
-    }
-
-    /* Premium Card Hover Effects */
-    .hover-lift {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .hover-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important;
-    }
-
-    /* Smooth Animations */
-    .fade-in {
-        animation: fadeIn 0.6s ease-in;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Premium Button */
-    .btn-premium {
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-    .btn-premium::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        transition: left 0.5s;
-    }
-    .btn-premium:hover::before {
-        left: 100%;
-    }
-
-    /* Wishlist Heart Animation */
-    .wishlist-btn i {
-        transition: all 0.2s ease;
-    }
-    .wishlist-btn:hover i {
-        transform: scale(1.2);
-    }
-    .wishlist-btn.active i {
-        color: var(--danger);
-        animation: heartBeat 0.3s;
-    }
-    @keyframes heartBeat {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.3); }
-    }
-
-    /* Responsive Banner */
-    #bannerCarousel {
-        border-radius: 16px;
-        overflow: hidden;
-    }
-
-    /* Product Card Enhancement */
-    .product-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #e5e7eb;
-        position: relative;
-    }
-    .product-card img {
-        transition: transform 0.4s ease;
-    }
-    .product-card:hover img {
-        transform: scale(1.05);
-    }
-
-    /* Category Card */
-    .category-card {
-        background: white;
-        position: relative;
-        overflow: hidden;
-        border: 1px solid #e5e7eb;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .category-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    .category-card:hover::before {
-        opacity: 1;
-    }
-    .category-card:hover {
-        border-color: #667eea;
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15) !important;
-    }
-    .category-card img {
-        transition: transform 0.3s ease;
-    }
-    .category-card:hover img {
-        transform: scale(1.1);
-    }
-
-    /* Screen-Specific Optimizations */
-    
-    /* Mobile (320px - 575px) */
-    @media (max-width: 575px) {
-        #bannerCarousel { height: 200px !important; border-radius: 8px; }
-        .section-title { font-size: 1.1rem !important; }
-        .feature-icon { width: 36px !important; height: 36px !important; font-size: 0.9rem !important; }
-        .feature-text { font-size: 0.65rem !important; }
-        .product-card { border-radius: 8px; }
-        .product-img { height: 140px !important; }
-        .product-name { font-size: 0.7rem !important; }
-        .product-price { font-size: 0.75rem !important; }
-        .btn-add-cart { font-size: 0.7rem !important; padding: 0.35rem 0.5rem !important; }
-        .category-img { height: 50px !important; }
-        .category-name { font-size: 0.7rem !important; }
-        .newsletter-section { padding: 1.5rem 1rem !important; }
-        .newsletter-title { font-size: 1.1rem !important; }
-        .newsletter-text { font-size: 0.75rem !important; }
-    }
-
-    /* Small Tablets (576px - 767px) */
-    @media (min-width: 576px) and (max-width: 767px) {
-        #bannerCarousel { height: 280px !important; }
-        .section-title { font-size: 1.3rem !important; }
-        .product-img { height: 160px !important; }
-        .product-name { font-size: 0.8rem !important; }
-        .category-img { height: 60px !important; }
-    }
-
-    /* Tablets (768px - 991px) */
-    @media (min-width: 768px) and (max-width: 991px) {
-        #bannerCarousel { height: 350px !important; }
-        .section-title { font-size: 1.5rem !important; }
-        .product-img { height: 180px !important; }
-    }
-
-    /* Desktop (992px - 1199px) */
-    @media (min-width: 992px) and (max-width: 1199px) {
-        #bannerCarousel { height: 420px !important; }
-        .product-img { height: 200px !important; }
-    }
-
-    /* Large Desktop (1200px+) */
-    @media (min-width: 1200px) {
-        #bannerCarousel { height: 500px !important; }
-        .product-img { height: 220px !important; }
-        .container { max-width: 1320px; }
-    }
-
-    /* Badge Styles */
-    .discount-badge {
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        z-index: 2;
-        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-    }
-
-    .rating-badge {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        background: rgba(31, 41, 55, 0.85);
-        backdrop-filter: blur(4px);
-        color: #fbbf24;
-        padding: 3px 8px;
-        border-radius: 6px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        z-index: 2;
-    }
-
-    /* View All Link */
-    .view-all-link {
-        color: var(--primary);
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.85rem;
-        transition: all 0.3s;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-    }
-    .view-all-link:hover {
-        color: var(--primary-dark);
-        gap: 8px;
-    }
-
-    /* Section Underline */
-    .section-underline {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 40px;
-        height: 3px;
-        background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
-        border-radius: 2px;
-    }
-
-    @media (max-width: 575px) {
-        .section-underline { width: 30px; height: 2px; }
-    }
-
-    /* Newsletter Premium Gradient */
-    .newsletter-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        position: relative;
-        overflow: hidden;
-    }
-    .newsletter-gradient::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        animation: rotate 20s linear infinite;
-    }
-    @keyframes rotate {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/landing.css' %}">
 {% endblock %}
 
 {% block content %}
 
 <!-- Banner Carousel -->
-<div class="container mt-3 mt-md-4 fade-in">
+<div class="container mt-5 mb-6 fade-in">
     <div id="bannerCarousel" class="carousel slide shadow-lg" data-bs-ride="carousel" data-bs-interval="4000">
         {% if banners %}
         <!-- Indicators -->
@@ -301,13 +45,13 @@
 
         <!-- Controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" style="background-color:rgba(31,41,55,0.7); border-radius:50%; padding:12px; width:40px; height:40px;"></span>
+            <span class="carousel-control-prev-icon carousel-icon"></span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" style="background-color:rgba(31,41,55,0.7); border-radius:50%; padding:12px; width:40px; height:40px;"></span>
+            <span class="carousel-control-next-icon carousel-icon"></span>
         </button>
         {% else %}
-            <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+            <div class="d-flex align-items-center justify-content-center h-100 banner-empty">
                 <p class="text-muted">No banners available</p>
             </div>
         {% endif %}
@@ -315,57 +59,53 @@
 </div>
 
 <!-- Features -->
-<section class="bg-white py-3 py-md-4 my-4 my-md-5 border-top border-bottom fade-in">
+<section class="features-section fade-in luxury-section">
     <div class="container">
-        <div class="row g-3 text-center">
-            <div class="col-6 col-md-3">
-                <div class="d-flex flex-column align-items-center">
-                    <div class="feature-icon d-flex align-items-center justify-content-center rounded-circle bg-primary text-white mb-2 shadow-sm" 
-                         style="width:50px; height:50px;">
+        <div class="features-row">
+            <div class="feature-item">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">
                         <i class="fas fa-shipping-fast"></i>
                     </div>
-                    <h6 class="fw-semibold mb-0 feature-text text-secondary">Free Shipping</h6>
-                    <p class="text-muted mb-0 d-none d-md-block" style="font-size:0.75rem;">On orders over $50</p>
                 </div>
+                <h6 class="feature-title">Free Shipping</h6>
+                <p class="feature-desc">On orders over $50</p>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="d-flex flex-column align-items-center">
-                    <div class="feature-icon d-flex align-items-center justify-content-center rounded-circle bg-success text-white mb-2 shadow-sm" 
-                         style="width:50px; height:50px;">
+            <div class="feature-item">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h6 class="fw-semibold mb-0 feature-text text-secondary">Secure Payment</h6>
-                    <p class="text-muted mb-0 d-none d-md-block" style="font-size:0.75rem;">100% protected</p>
                 </div>
+                <h6 class="feature-title">Secure Payment</h6>
+                <p class="feature-desc">100% protected</p>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="d-flex flex-column align-items-center">
-                    <div class="feature-icon d-flex align-items-center justify-content-center rounded-circle bg-warning text-white mb-2 shadow-sm" 
-                         style="width:50px; height:50px;">
+            <div class="feature-item">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">
                         <i class="fas fa-undo"></i>
                     </div>
-                    <h6 class="fw-semibold mb-0 feature-text text-secondary">Easy Returns</h6>
-                    <p class="text-muted mb-0 d-none d-md-block" style="font-size:0.75rem;">30 days guarantee</p>
                 </div>
+                <h6 class="feature-title">Easy Returns</h6>
+                <p class="feature-desc">30 days guarantee</p>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="d-flex flex-column align-items-center">
-                    <div class="feature-icon d-flex align-items-center justify-content-center rounded-circle bg-danger text-white mb-2 shadow-sm" 
-                         style="width:50px; height:50px;">
+            <div class="feature-item">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">
                         <i class="fas fa-headset"></i>
                     </div>
-                    <h6 class="fw-semibold mb-0 feature-text text-secondary">24/7 Support</h6>
-                    <p class="text-muted mb-0 d-none d-md-block" style="font-size:0.75rem;">Dedicated support</p>
                 </div>
+                <h6 class="feature-title">24/7 Support</h6>
+                <p class="feature-desc">Dedicated support</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Categories -->
-<section class="container my-4 my-md-5 fade-in">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="fw-bold mb-0 section-title position-relative pb-2">
+<section class="container luxury-section fade-in">
+    <div class="section-header">
+        <h2 class="section-title position-relative pb-2">
             Shop by Category
             <span class="section-underline"></span>
         </h2>
@@ -373,33 +113,28 @@
             View All <i class="fas fa-arrow-right"></i>
         </a>
     </div>
-    <div class="row g-2 g-md-3">
+    <div class="categories-grid">
         {% for category in categories %}
-        <div class="col-3 col-sm-3 col-md-3 col-lg-2">
-            <a href="{{ category.url }}" class="d-block text-decoration-none">
-                <div class="category-card hover-lift text-center rounded-3 p-3 h-100 shadow-sm">
-                    <div class="d-flex align-items-center justify-content-center mb-2" style="height:70px;">
-                        <img src="{{ category.image_url }}" alt="{{ category.name }}" 
-                            class="category-img img-fluid" 
-                            style="max-height:70px; max-width:100%; object-fit:contain;">
-                    </div>
-                    <h6 class="category-name fw-semibold mb-0 text-dark">{{ category.name }}</h6>
+        <a href="{{ category.url }}" class="category-card-link">
+            <div class="category-card hover-lift">
+                <div class="category-image-wrapper">
+                    <img src="{{ category.image_url }}" alt="{{ category.name }}" class="category-img">
                 </div>
-            </a>
-        </div>
+                <h6 class="category-name">{{ category.name }}</h6>
+            </div>
+        </a>
         {% empty %}
         <div class="col-12">
             <p class="text-center text-muted">No categories available</p>
         </div>
         {% endfor %}
     </div>
-
 </section>
 
 <!-- New Arrivals -->
-<section class="container my-4 my-md-5 fade-in">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="fw-bold mb-0 section-title position-relative pb-2">
+<section class="container luxury-section fade-in">
+    <div class="section-header">
+        <h2 class="section-title position-relative pb-2">
             New Arrivals
             <span class="section-underline"></span>
         </h2>
@@ -407,54 +142,55 @@
             View All <i class="fas fa-arrow-right"></i>
         </a>
     </div>
-    <div class="row g-2 g-md-3">
+    <div class="row g-4">
         {% for product in new_arrivals %}
         <div class="col-6 col-sm-6 col-md-4 col-lg-3">
             <div class="product-card hover-lift h-100 shadow-sm position-relative">
                 <!-- Wishlist Button -->
-                <button class="wishlist-btn position-absolute bg-white border-0 rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
-                        style="top:8px; right:8px; width:32px; height:32px; z-index:3; cursor:pointer;"
+                <button class="wishlist-btn position-absolute border-0 rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
                         data-product-id="{{ product.id }}">
                     <i class="far fa-heart"></i>
                 </button>
 
-                <a href="{{ product.url }}" class="text-decoration-none text-dark d-block">
-                    <div class="position-relative overflow-hidden">
+                <a href="{{ product.url }}" class="product-link text-decoration-none d-block flex-grow-1">
+                    <div class="position-relative overflow-hidden product-image-wrapper">
                         <img src="{{ product.image_url }}" alt="{{ product.name }}" 
-                             class="product-img img-fluid w-100" 
-                             style="object-fit:cover;">
+                             class="product-img img-fluid w-100">
                         
-                        {% if product.discount_percent > 0 %}
-                        <div class="discount-badge">
-                            -{{ product.discount_percent }}%
-                        </div>
-                        {% endif %}
-                        
-                        <div class="rating-badge">
-                            <i class="fas fa-star"></i> {{ product.avg_rating }}
+                        <div class="badges-row">
+                            {% if product.discount_percent > 0 %}
+                            <div class="discount-badge">
+                                -{{ product.discount_percent }}%
+                            </div>
+                            {% else %}
+                            <div></div>
+                            {% endif %}
+                            <div class="rating-badge">
+                                <i class="fas fa-star"></i> <span>{{ product.avg_rating }}</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="p-2 p-md-3">
+                    <div class="product-info p-3 p-md-4">
                         <h6 class="product-name fw-semibold mb-1 text-truncate">{{ product.name }}</h6>
                         
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="product-price fw-bold text-dark">₹{{ product.price }}</span>
+                        <div class="product-price-wrapper mb-2">
+                            <span class="product-price fw-bold">₹{{ product.price }}</span>
                             {% if product.mrp > product.price %}
-                            <span class="text-muted text-decoration-line-through" style="font-size:0.75rem;">₹{{ product.mrp }}</span>
+                            <span class="product-mrp text-muted text-decoration-line-through">₹{{ product.mrp }}</span>
                             {% endif %}
                         </div>
-                        
-                        <button class="btn btn-primary btn-premium btn-add-cart w-100 fw-semibold {% if not product.in_stock %}btn-secondary disabled{% endif %}" 
-                                data-product-id="{{ product.id }}">
-                            {% if product.in_stock %}
-                            <i class="fas fa-shopping-cart me-1"></i> Add to Cart
-                            {% else %}
-                            Out of Stock
-                            {% endif %}
-                        </button>
                     </div>
                 </a>
+                
+                <button class="btn btn-primary btn-premium btn-add-cart w-100 fw-semibold mx-3 mb-3 {% if not product.in_stock %}btn-secondary disabled{% endif %}" 
+                        data-product-id="{{ product.id }}">
+                    {% if product.in_stock %}
+                    <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                    {% else %}
+                    Out of Stock
+                    {% endif %}
+                </button>
             </div>
         </div>
         {% empty %}
@@ -466,22 +202,14 @@
 </section>
 
 <!-- Newsletter -->
-<section class="container my-4 my-md-5 fade-in">
-    <div class="newsletter-gradient newsletter-section rounded-4 p-4 p-md-5 text-center text-white shadow-lg position-relative" style="overflow:hidden;">
-        <div class="position-relative" style="z-index:2;">
-            <h3 class="newsletter-title fw-bold mb-2 mb-md-3">Subscribe & Get 10% Off</h3>
-            <p class="newsletter-text mb-3 mb-md-4 opacity-90">Join our newsletter for exclusive deals and new arrivals</p>
-            <form class="row g-2 justify-content-center">
-                <div class="col-12 col-sm-8 col-md-6 col-lg-5">
-                    <input type="email" placeholder="Enter your email" 
-                           class="form-control form-control-lg rounded-pill border-0 shadow-sm" 
-                           required style="padding:0.75rem 1.25rem;">
-                </div>
-                <div class="col-12 col-sm-4 col-md-3 col-lg-2">
-                    <button type="submit" class="btn btn-warning btn-lg w-100 fw-semibold rounded-pill shadow-sm">
-                        Subscribe
-                    </button>
-                </div>
+<section class="container luxury-section fade-in">
+    <div class="newsletter-wrapper">
+        <div class="newsletter-content">
+            <h3 class="newsletter-title">Subscribe & Get 10% Off</h3>
+            <p class="newsletter-text">Join our newsletter for exclusive deals and new arrivals</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email" class="newsletter-input" required>
+                <button type="submit" class="newsletter-btn">Subscribe</button>
             </form>
         </div>
     </div>

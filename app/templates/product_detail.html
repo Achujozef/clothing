@@ -8,16 +8,16 @@
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
-  <div class="row g-4">
+<div class="container py-5">
+  <div class="row g-5">
     <!-- Image Gallery -->
     <div class="col-md-6">
       <div class="position-relative">
         <div class="bg-light rounded overflow-hidden position-relative" id="mainImageContainer" style="cursor:zoom-in;">
           {% if images and images.0.image %}
-          <img src="{{ images.0.image.url }}" alt="{{ product.name }}" class="w-100" id="mainImage" style="height:500px; object-fit:contain;" loading="lazy">
+          <img src="{{ images.0.image.url }}" alt="{{ product.name }}" class="w-100" id="mainImage" style="min-height:600px; object-fit:contain;" loading="lazy">
           {% else %}
-          <img src="{% static 'images/no-image.jpg' %}" alt="{{ product.name }}" class="w-100" id="mainImage" style="height:500px; object-fit:contain;" loading="lazy">
+          <img src="{% static 'images/no-image.jpg' %}" alt="{{ product.name }}" class="w-100" id="mainImage" style="min-height:600px; object-fit:contain;" loading="lazy">
           {% endif %}
           <div class="position-absolute bottom-0 end-0 bg-dark text-white px-2 py-1 rounded-3" id="imageCounter" style="font-size:0.9rem;">
             {% if images %}1 / {{ images|length }}{% else %}1 / 1{% endif %}
@@ -25,11 +25,11 @@
         </div>
 
         {% if images|length > 1 %}
-        <div class="d-flex gap-2 mt-2 overflow-auto pb-1" id="thumbnailContainer">
+        <div class="thumbnail-gallery" id="thumbnailContainer">
           {% for image in images %}
           <img src="{{ image.image.url }}" alt="{{ product.name }}"
-               class="rounded border {% if forloop.first %}border-primary{% else %}border-secondary{% endif %} thumbnail"
-               data-index="{{ forloop.counter0 }}" style="width:80px;height:80px;object-fit:cover;cursor:pointer;" loading="lazy">
+               class="thumbnail {% if forloop.first %}active{% endif %}"
+               data-index="{{ forloop.counter0 }}" loading="lazy">
           {% endfor %}
         </div>
         {% endif %}
@@ -38,7 +38,7 @@
 
     <!-- Product Info -->
     <div class="col-md-6">
-      <div class="bg-white rounded shadow-sm p-4">
+      <div class="luxury-card">
         <h1 class="h3 fw-bold">{{ product.name }}</h1>
 
         <div class="d-flex align-items-center gap-2 my-3">
@@ -106,7 +106,7 @@
 
   <!-- Related Products -->
   {% if related_products %}
-  <div class="mt-5">
+  <div class="luxury-section mt-6">
     <h2 class="h5 fw-bold mb-3">Similar Products</h2>
     <div class="d-flex gap-3 overflow-auto pb-2">
       {% for product in related_products %}
@@ -136,20 +136,29 @@ document.addEventListener("DOMContentLoaded", () => {
   let isZoomed = false;
   let currentIndex = 0;
 
-  // Image Zoom
-  document.getElementById("mainImageContainer").onclick = e => {
+  // Enhanced Image Zoom
+  const imageContainer = document.getElementById("mainImageContainer");
+  imageContainer.onclick = e => {
     if (!isZoomed) {
-      mainImage.style.transform = "scale(2)";
-      mainImage.style.transformOrigin = "center center";
-    } else mainImage.style.transform = "scale(1)";
-    isZoomed = !isZoomed;
+      const zoomDiv = document.createElement('div');
+      zoomDiv.className = 'image-zoom-active';
+      const zoomImg = mainImage.cloneNode(true);
+      zoomImg.style.transform = 'scale(1)';
+      zoomDiv.appendChild(zoomImg);
+      document.body.appendChild(zoomDiv);
+      isZoomed = true;
+      zoomDiv.onclick = () => {
+        document.body.removeChild(zoomDiv);
+        isZoomed = false;
+      };
+    }
   };
 
   // Thumbnail switch
   thumbs.forEach((thumb, i) => {
     thumb.addEventListener("click", () => {
-      thumbs.forEach(t => t.classList.remove("border-primary"));
-      thumb.classList.add("border-primary");
+      thumbs.forEach(t => t.classList.remove("active"));
+      thumb.classList.add("active");
       mainImage.src = thumb.src;
       currentIndex = i;
       document.getElementById("imageCounter").textContent = `${i+1} / ${thumbs.length}`;
