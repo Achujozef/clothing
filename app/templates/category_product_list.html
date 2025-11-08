@@ -28,26 +28,26 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
                 {% for item in categories_with_products %}
                 <div class="col">
-                    <a href="{% url 'product_list' %}?category={{ item.category.slug }}" class="text-decoration-none text-dark d-block border rounded-3 overflow-hidden shadow-sm h-100" style="transition:0.3s;">
+                    <a href="{% url 'product_list' %}?category={{ item.category.slug }}" class="text-decoration-none text-dark d-block border rounded-3 overflow-hidden shadow-sm h-100" style="transition:0.3s; border-color: var(--border); background: var(--bg-elevated);">
                         {% if item.category.image %}
                             <img src="{{ item.category.image.url }}" alt="{{ item.category.name }}" class="w-100" style="height:180px; object-fit:cover;">
                         {% elif item.products and item.products.0.images.first %}
                             <img src="{{ item.products.0.images.first.image.url }}" alt="{{ item.category.name }}" class="w-100" style="height:180px; object-fit:cover;">
                         {% else %}
-                            <div class="d-flex justify-content-center align-items-center" style="height:180px; background: linear-gradient(135deg,#2563eb,#1d4ed8);">
-                                <i class="{% if item.category.icon %}{{ item.category.icon }}{% else %}fas fa-tag{% endif %}" style="font-size:3rem; color:white; opacity:0.8;"></i>
+                            <div class="d-flex justify-content-center align-items-center" style="height:180px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
+                                <i class="{% if item.category.icon %}{{ item.category.icon }}{% else %}fas fa-tag{% endif %}" style="font-size:3rem; color:var(--gold); opacity:0.9;"></i>
                             </div>
                         {% endif %}
                         <div class="p-3">
                             <h3 class="h6 fw-bold d-flex align-items-center gap-2 mb-1">
-                                <i class="{% if item.category.icon %}{{ item.category.icon }}{% else %}fas fa-tag{% endif %} text-primary"></i>
+                                <i class="{% if item.category.icon %}{{ item.category.icon }}{% else %}fas fa-tag{% endif %}" style="color: var(--primary);"></i>
                                 {{ item.category.name }}
                             </h3>
                             <p class="text-muted mb-1">{{ item.products|length }} Product{{ item.products|length|pluralize }}</p>
                             {% if item.category.description %}
                             <p class="small text-muted mb-2">{{ item.category.description|truncatewords:15 }}</p>
                             {% endif %}
-                            <span class="d-inline-flex align-items-center gap-1 text-primary fw-semibold small">
+                            <span class="d-inline-flex align-items-center gap-1 fw-semibold small" style="color: var(--primary);">
                                 Explore Products <i class="fas fa-arrow-right"></i>
                             </span>
                         </div>
@@ -63,7 +63,7 @@
         {% for item in categories_with_products %}
         <div class="mb-5" id="category-{{ item.category.id }}">
             <div class="d-flex justify-content-between align-items-center p-3 rounded-3 mb-3" 
-                 style="background: linear-gradient(135deg,#2563eb,#1d4ed8); color:white; box-shadow:0 4px 12px rgba(37,99,235,0.2);">
+                 style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color:white; box-shadow: var(--shadow-card);">
                 <div>
                     <h2 class="h5 fw-bold d-flex align-items-center gap-2 mb-1">
                         <i class="{% if item.category.icon %}{{ item.category.icon }}{% else %}fas fa-tag{% endif %}"></i>
@@ -72,54 +72,59 @@
                     <p class="mb-0" style="opacity:0.9; font-weight:500;">{{ item.products|length }} Product{{ item.products|length|pluralize }}</p>
                 </div>
                 {% if item.products %}
-                <a href="{% url 'product_list' %}?category={{ item.category.slug }}" class="d-inline-flex align-items-center gap-1 text-white fw-semibold px-3 py-1 rounded-2" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); transition:0.3s;">View All <i class="fas fa-arrow-right"></i></a>
+                <a href="{% url 'product_list' %}?category={{ item.category.slug }}" class="d-inline-flex align-items-center gap-1 text-white fw-semibold px-3 py-1 rounded-2" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); transition:0.3s; border: 1px solid rgba(212, 175, 55, 0.3);">View All <i class="fas fa-arrow-right"></i></a>
                 {% endif %}
             </div>
 
             {% if item.products %}
             <div class="position-relative overflow-hidden">
-                <button class="position-absolute top-50 start-0 translate-middle-y btn btn-light rounded-circle shadow-sm scroll-btn left" onclick="scrollProducts('category-{{ item.category.id }}-row', -1)" style="width:45px; height:45px; opacity:0; transition:0.3s;"><i class="fas fa-chevron-left"></i></button>
+                <button class="position-absolute top-50 start-0 translate-middle-y btn btn-light rounded-circle shadow-sm scroll-btn left" onclick="scrollProducts('category-{{ item.category.id }}-row', -1)" style="width:45px; height:45px; opacity:0; transition:0.3s; background: var(--bg-surface); border-color: var(--border);"><i class="fas fa-chevron-left"></i></button>
                 <div class="d-flex gap-3 overflow-auto pb-2 products-row" id="category-{{ item.category.id }}-row" style="scroll-behavior:smooth;">
                     {% for product in item.products %}
-                    <div class="d-flex flex-column border rounded-3 p-3 shadow-sm product-card" style="min-width:220px; width:220px; transition:0.3s; position:relative;">
+                    <div class="premium-product-card" style="min-width:220px; width:220px;">
                         {% with variant=product.variants.first %}
-                        {% if variant.discount_percent > 0 %}
-                        <div class="position-absolute top-0 start-0 m-3 px-2 py-1 rounded" style="background: linear-gradient(135deg,#ef4444,#dc2626); color:white; font-size:0.85rem; font-weight:700;">-{{ variant.discount_percent }}%</div>
-                        {% endif %}
-                        <button class="wishlist-btn position-absolute top-0 end-0 m-3 rounded-circle border-0 d-flex align-items-center justify-content-center shadow-sm {% if product.id in wishlist_items %}active{% endif %}" onclick="toggleWishlist(event, {{ product.id }})" style="width:36px; height:36px; z-index:5;">
-                            <i class="{% if product.id in wishlist_items %}fas{% else %}far{% endif %} fa-heart"></i>
-                        </button>
-                        <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none text-dark">
-                            <img src="{% if product.images.first %}{{ product.images.first.image.url }}{% else %}{% static 'images/no-image.jpg' %}{% endif %}" class="w-100 rounded mb-2" style="height:200px; object-fit:cover;" alt="{{ product.name }}">
-                            <h6 class="fw-semibold mb-1" style="height:40px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">{{ product.name }}</h6>
-                            <div class="mb-1">
-                                <span class="fw-bold">₹{{ variant.price }}</span>
-                                {% if variant.mrp > variant.price %}
-                                <span class="text-muted text-decoration-line-through ms-1">₹{{ variant.mrp }}</span>
-                                {% endif %}
-                            </div>
-                            <div class="text-warning small mb-2">
+                        <div class="premium-product-image-container">
+                            {% if variant.discount_percent > 0 %}
+                            <div class="premium-product-badge">-{{ variant.discount_percent }}%</div>
+                            {% endif %}
+                            <button class="premium-product-wishlist {% if product.id in wishlist_items %}active{% endif %}" onclick="toggleWishlist(event, {{ product.id }})" type="button">
+                                <i class="{% if product.id in wishlist_items %}fas{% else %}far{% endif %} fa-heart"></i>
+                            </button>
+                            <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none">
+                                <img src="{% if product.images.first %}{{ product.images.first.image.url }}{% else %}{% static 'images/no-image.jpg' %}{% endif %}" class="premium-product-image" alt="{{ product.name }}">
+                            </a>
+                        </div>
+                        <div class="premium-product-details">
+                            <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none">
+                                <h6 class="premium-product-name">{{ product.name }}</h6>
+                            </a>
+                            <div class="premium-product-rating">
                                 <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                                 <span class="text-muted ms-1" style="font-size:0.85rem;">(4.5)</span>
                             </div>
-                        </a>
-                        <button class="btn btn-primary mt-auto {% if product.id in cart_items %}in-cart{% endif %}" 
-                                onclick="addToCart(event, {{ product.id }})" 
-                                {% if variant.available_stock <= 0 %}disabled{% endif %}>
-                            {% if product.id in cart_items %}
-                                <i class="fas fa-check me-1"></i>In Cart
-                            {% elif variant.available_stock <= 0 %}
-                                Out of Stock
-                            {% else %}
-                                <i class="fas fa-shopping-cart me-1"></i>Add to Cart
-                            {% endif %}
-                        </button>
-
+                            <div class="premium-product-price-container">
+                                <span class="premium-product-price">₹{{ variant.price }}</span>
+                                {% if variant.mrp > variant.price %}
+                                <span class="premium-product-mrp">₹{{ variant.mrp }}</span>
+                                {% endif %}
+                            </div>
+                            <button class="premium-product-cta {% if product.id in cart_items %}added{% endif %} {% if variant.available_stock <= 0 %}disabled{% endif %}" 
+                                    onclick="addToCart(event, {{ product.id }})" 
+                                    {% if variant.available_stock <= 0 %}disabled{% endif %}>
+                                {% if product.id in cart_items %}
+                                    <i class="fas fa-check"></i><span>In Cart</span>
+                                {% elif variant.available_stock <= 0 %}
+                                    <span>Out of Stock</span>
+                                {% else %}
+                                    <i class="fas fa-shopping-bag"></i><span>Add to Cart</span>
+                                {% endif %}
+                            </button>
+                        </div>
                         {% endwith %}
                     </div>
                     {% endfor %}
                 </div>
-                <button class="position-absolute top-50 end-0 translate-middle-y btn btn-light rounded-circle shadow-sm scroll-btn right" onclick="scrollProducts('category-{{ item.category.id }}-row',1)" style="width:45px; height:45px; opacity:0; transition:0.3s;"><i class="fas fa-chevron-right"></i></button>
+                <button class="position-absolute top-50 end-0 translate-middle-y btn btn-light rounded-circle shadow-sm scroll-btn right" onclick="scrollProducts('category-{{ item.category.id }}-row',1)" style="width:45px; height:45px; opacity:0; transition:0.3s; background: var(--bg-surface); border-color: var(--border);"><i class="fas fa-chevron-right"></i></button>
             </div>
             {% else %}
             <div class="text-center border rounded-3 p-4 shadow-sm">

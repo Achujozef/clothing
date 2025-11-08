@@ -15,6 +15,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from .models import Product, ProductVariant, Category
+from django.urls import reverse
+from django.db.models import Count
 
 
 
@@ -121,6 +123,7 @@ class LandingPageView(View):
     template_name = "landing.html"
 
     def get(self, request):
+
         banners = Banner.objects.filter(active=True).order_by("order")[:5]
 
         categories = Category.objects.filter(is_active=True).order_by("sort_order")[:8]
@@ -134,9 +137,9 @@ class LandingPageView(View):
                 "image_url": img_url
             })
 
+        # New arrivals
         new_arrivals = Product.objects.filter(is_active=True).order_by("-created_at")[:8]
         products_data = []
-
         for product in new_arrivals:
             variant = product.main_variant()
             if not variant:
@@ -148,7 +151,6 @@ class LandingPageView(View):
             half_star = 1 if (avg - full_stars) >= 0.5 else 0
             empty_stars = 5 - full_stars - half_star
 
-            # Precompute lists for template
             products_data.append({
                 "name": product.name,
                 "url": product.get_absolute_url(),
@@ -162,10 +164,55 @@ class LandingPageView(View):
                 "stars_empty": range(empty_stars),
             })
 
+        # Best selling (fallback using view counts if explicit sales data not available)
+        best_selling_qs = Product.objects.filter(is_active=True).annotate(views_count=Count("views")).order_by("-views_count")[:8]
+        best_selling = []
+        for product in best_selling_qs:
+            variant = product.main_variant()
+            if not variant:
+                continue
+            img_url = product.images.first().image.url if product.images.exists() else "/static/images/placeholder.png"
+            avg = product.avg_rating() or 0
+            best_selling.append({
+                "name": product.name,
+                "url": product.get_absolute_url(),
+                "price": variant.get_price(),
+                "mrp": variant.mrp,
+                "discount_percent": variant.discount_percent,
+                "image_url": img_url,
+                "in_stock": variant.available_stock() > 0,
+                "avg_rating": avg,
+            })
+
+        # Top rated: compute avg via product.avg_rating() and sort in-Python to avoid assumptions about review model
+        candidates = Product.objects.filter(is_active=True).prefetch_related("images")[:200]
+        rated = []
+        for product in candidates:
+            avg = product.avg_rating() or 0
+            if avg <= 0:
+                continue
+            variant = product.main_variant()
+            if not variant:
+                continue
+            img_url = product.images.first().image.url if product.images.exists() else "/static/images/placeholder.png"
+            rated.append({
+                "name": product.name,
+                "url": product.get_absolute_url(),
+                "price": variant.get_price(),
+                "mrp": variant.mrp,
+                "discount_percent": variant.discount_percent,
+                "image_url": img_url,
+                "in_stock": variant.available_stock() > 0,
+                "avg_rating": avg,
+            })
+        top_rated = sorted(rated, key=lambda x: x["avg_rating"], reverse=True)[:8]
+
         context = {
             "banners": banners,
             "categories": categories_data,
             "new_arrivals": products_data,
+            "best_selling": best_selling,
+            "top_rated": top_rated,
         }
         return render(request, self.template_name, context)
 

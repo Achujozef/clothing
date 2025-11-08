@@ -12,54 +12,231 @@
 {% block content %}
 <div class="container py-5">
 
-    <!-- Filters & Search -->
-    <div class="filter-modern-card mb-6">
-        <form method="get" class="row g-4 align-items-end">
-            <div class="col-lg-3 col-md-4 col-12">
-                <label class="form-label">Search</label>
-                <input 
-                    type="text" 
-                    name="q" 
-                    class="form-control" 
-                    placeholder="Search products..." 
-                    value="{{ query }}" 
-                    autocomplete="off"
-                >
+    <!-- Filters -->
+    <div class="filter-modern-card mb-6 no-radius">
+        <form method="get" id="filtersForm" class="row g-2 gy-3 align-items-end">
+
+            <!-- Mobile: Filter icons row -->
+            <div class="col-12 d-md-none">
+                <div class="d-flex justify-content-between filter-icon-bar">
+                    <button type="button" class="btn btn-light flex-fill filter-icon-btn border-end-mobile" onclick="toggleFilterModal('sortModal')">
+                        <i class="fas fa-sort filter-icon"></i><div class="filter-label">Sort</div>
+                    </button>
+                    <div class="vertical-divider"></div>
+                    <button type="button" class="btn btn-light flex-fill filter-icon-btn border-end-mobile" onclick="toggleFilterModal('colorModal')">
+                        <i class="fas fa-palette filter-icon"></i><div class="filter-label">Color</div>
+                    </button>
+                    <div class="vertical-divider"></div>
+                    <button type="button" class="btn btn-light flex-fill filter-icon-btn" onclick="toggleFilterModal('sizeModal')">
+                        <i class="fas fa-ruler-combined filter-icon"></i><div class="filter-label">Size</div>
+                    </button>
+                </div>
             </div>
-            <div class="col-lg-2 col-md-3 col-6">
-                <label class="form-label">Sort By</label>
-                <select name="sort" class="form-select" onchange="this.form.submit()">
-                    <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
-                    <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
-                    <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
-                    <option value="name" {% if sort == 'name' %}selected{% endif %}>Name</option>
-                </select>
+            <!-- END Mobile icon row -->
+
+            <!-- Desktop Filters -->
+            <div class="d-none d-md-flex flex-wrap w-100 align-items-end">
+                <div class="col-lg-2 col-md-3 col-12 mb-0">
+                    <label class="form-label mb-1">Sort By</label>
+                    <select name="sort" class="form-select" onchange="this.form.submit()">
+                        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="name" {% if sort == 'name' %}selected{% endif %}>Name</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-3 col-12 mb-0">
+                    <label class="form-label mb-1">Color</label>
+                    <select name="color" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Colors</option>
+                        {% for c in available_colors %}
+                            <option value="{{ c }}" {% if c in request.GET.color %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-3 col-12 mb-0">
+                    <label class="form-label mb-1">Size</label>
+                    <select name="size" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Sizes</option>
+                        {% for s in available_sizes %}
+                            <option value="{{ s }}" {% if s in request.GET.size %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Remove Apply filter button as per request -->
             </div>
-            <div class="col-lg-2 col-md-3 col-6">
-                <label class="form-label">Color</label>
-                <select name="color" class="form-select" onchange="this.form.submit()">
-                    <option value="">All Colors</option>
-                    {% for c in available_colors %}
-                        <option value="{{ c }}" {% if c in request.GET.color %}selected{% endif %}>{{ c }}</option>
-                    {% endfor %}
-                </select>
+            <!-- END DESKTOP FILTERS -->
+
+            <!-- Mobile Filter Modals -->
+            <div class="modal fade" id="sortModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-sort me-2"></i>Sort</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <select name="sort" class="form-select" form="filtersForm" onchange="submitFilterAndClose(this)">
+                        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="name" {% if sort == 'name' %}selected{% endif %}>Name</option>
+                    </select>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- Remove Apply button -->
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-lg-2 col-md-3 col-6">
-                <label class="form-label">Size</label>
-                <select name="size" class="form-select" onchange="this.form.submit()">
-                    <option value="">All Sizes</option>
-                    {% for s in available_sizes %}
-                        <option value="{{ s }}" {% if s in request.GET.size %}selected{% endif %}>{{ s }}</option>
-                    {% endfor %}
-                </select>
+            <div class="modal fade" id="colorModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-palette me-2"></i>Color</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <select name="color" class="form-select" form="filtersForm" onchange="submitFilterAndClose(this)">
+                        <option value="">All Colors</option>
+                        {% for c in available_colors %}
+                            <option value="{{ c }}" {% if c in request.GET.color %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- Remove Apply button -->
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-lg-3 col-md-12 col-12 d-grid pt-2 pt-lg-0">
-                <button type="submit" class="btn btn-filter-elevated">
-                    <i class="fas fa-filter me-2"></i>Apply Filters
-                </button>
+            <div class="modal fade" id="sizeModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-ruler-combined me-2"></i>Size</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <select name="size" class="form-select" form="filtersForm" onchange="submitFilterAndClose(this)">
+                        <option value="">All Sizes</option>
+                        {% for s in available_sizes %}
+                            <option value="{{ s }}" {% if s in request.GET.size %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- Remove Apply button -->
+                  </div>
+                </div>
+              </div>
             </div>
+            <!-- END Mobile Modals -->
+
         </form>
     </div>
+    <style>
+        /* Remove border-radius from the filter card */
+        .filter-modern-card, .filter-modern-card * {
+            border-radius: 0 !important;
+        }
+        /* Remove padding between icon and the div */
+        .filter-icon-bar .filter-icon-btn {
+            padding: 0 !important;
+        }
+        /* Add vertical divider */
+        .vertical-divider {
+            display: inline-block;
+            width:1px;
+            min-width:1px;
+            height:32px;
+            background:#ebebeb;
+            align-self:center;
+            margin: 0 0;
+        }
+        @media (max-width: 767.98px) {
+            .filter-modern-card .d-md-flex {
+                display: none !important;
+            }
+            .filter-icon-bar {
+                align-items: stretch;
+            }
+            .filter-icon-bar .filter-icon-btn {
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                font-size: 0.91rem;
+                border: none;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 0 !important;
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0 !important;
+            }
+            .filter-icon-bar .filter-icon {
+                font-size: 1.10rem!important;
+                color: #959595!important;
+                opacity: 0.7!important;
+                margin-bottom: 0.10rem;
+            }
+            .filter-icon-bar .filter-label {
+                font-size: 0.73rem;
+                margin-top: -0.08rem;
+                color: #aaaaaa;
+                font-weight: 400;
+                letter-spacing: 0.01em;
+            }
+            .vertical-divider {
+                margin: 0;
+            }
+        }
+        .filter-modern-card .form-label,
+        .filter-modern-card .form-control,
+        .filter-modern-card .form-select {
+            font-size: 1rem;
+            min-height: 2.2rem;
+        }
+        .filter-modern-card .form-label {
+            color: #666;
+            font-size: 0.97rem;
+            margin-bottom: 2px !important;
+        }
+        .filter-modern-card .col-lg-2,
+        .filter-modern-card .col-md-3,
+        .filter-modern-card .col-12,
+        .filter-modern-card .col-lg-3 {
+            margin-bottom: 0 !important;
+        }
+        .filter-modern-card .d-md-flex {
+            gap: 10px;
+        }
+        .btn-filter-elevated {
+            min-height: 37px;
+        }
+    </style>
+    <script>
+        function toggleFilterModal(modalId) {
+            var myModal = new bootstrap.Modal(document.getElementById(modalId));
+            myModal.show();
+        }
+        // Submit filter and close modal on selection in mobile popup
+        function submitFilterAndClose(selectEl) {
+            // Find which modal this select is under, and close it after submit
+            let modal = selectEl.closest('.modal');
+            document.getElementById('filtersForm').submit();
+            if(modal) {
+                var instance = bootstrap.Modal.getInstance(modal);
+                if(instance) {
+                    setTimeout(function() { instance.hide(); }, 100); // Delay just to ensure form submits
+                }
+            }
+        }
+    </script>
 
     <!-- Product Grid -->
     <div class="premium-grid">

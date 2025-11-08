@@ -1,9 +1,9 @@
 /* Page background uses theme light color */
-body { background-color: var(--light); }
+body { background-color: var(--bg); }
 /* Filters Card */
 .filter-modern-card {
-    border-radius: 1.25rem;
-    box-shadow: 0 8px 32px rgba(18, 28, 45, 0.09), 0 1.5px 4px rgba(18,28,45,0.02);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
     border: 1px solid var(--border);
     background: var(--bg-elevated);
     padding: 2rem 1.5rem;
@@ -12,42 +12,42 @@ body { background-color: var(--light); }
 .filter-modern-card label {
     font-size: 1rem;
     font-weight: 600;
-    color: #22223b;
+    color: var(--text-dark);
     margin-bottom: .25rem;
     letter-spacing: .01em;
 }
 
 .filter-modern-card input,
 .filter-modern-card select {
-    border-radius: 0.75rem !important;
+    border-radius: var(--radius-lg) !important;
     font-size: 0.97rem;
     min-height: 2.65rem;
     border: 1px solid var(--border);
-    background-color: var(--bg);
-    transition: border-color 0.23s;
+    background-color: var(--bg-surface);
+    transition: border-color var(--transition-base);
 }
 .filter-modern-card input:focus,
 .filter-modern-card select:focus {
-    border-color: #4461f2;
+    border-color: var(--primary);
     outline: none;
-    box-shadow: 0 0 0 3px #e5eaff;
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
 }
 .btn-filter-elevated {
-    background: linear-gradient(90deg,#4461f2,#3aaed8 120%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     border: none;
-    color: #fff;
+    color: var(--text-light);
     font-weight: 600;
     letter-spacing: 0.03em;
-    border-radius: 0.75rem;
+    border-radius: var(--radius-lg);
     font-size: 1.02rem;
-    transition: background 0.23s, box-shadow 0.23s, transform 0.18s;
-    box-shadow: 0 2px 8px rgba(69,97,242,0.08);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
 }
 .btn-filter-elevated:hover, .btn-filter-elevated:focus {
-    background: linear-gradient(90deg,#3550d4,#309bc1 120%);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 24px rgba(69,97,242,0.15);
-    color: #fff;
+    box-shadow: var(--shadow-lg);
+    color: var(--text-light);
 }
 
 /* Product Grid */
@@ -96,21 +96,22 @@ body { background-color: var(--light); }
 /* Product Card */
 .elevated-card {
     background: var(--bg-elevated);
-    border: none;
-    border-radius: 1.3rem;
-    box-shadow: 0 8px 32px rgba(18, 28, 45, 0.13);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
     display: flex;
     flex-direction: column;
     height: 100%;
-    transition: box-shadow 0.25s, transform 0.20s;
+    transition: all var(--transition-base) var(--transition-timing);
     position: relative;
     min-height: 425px;
     overflow: hidden;
     padding-bottom: 1.2rem;
 }
 .elevated-card:hover {
-    box-shadow: 0 12px 32px rgba(69,97,242,0.13), 0 1.5px 4px rgba(18,28,45,0.08);
+    box-shadow: var(--shadow-card-hover);
     transform: translateY(-4px) scale(1.015);
+    border-color: var(--primary);
     z-index: 3;
 }
 /* Using global .fade-in; keep card-specific animation only if needed */
@@ -123,17 +124,17 @@ body { background-color: var(--light); }
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    background: linear-gradient(120deg, #f3f6fd 83%, #fff 100%);
+    background: var(--bg-warm);
     overflow: hidden;
-    border-radius: 1.1rem 1.1rem 0 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 }
 .elevated-card .wishlist-btn {
     position: absolute !important;
     top: 18px;
     right: 18px;
-    background: #fff;
-    border: 1.5px solid #f3f5fa;
-    box-shadow: 0 2px 8px rgba(69,97,242,0.08);
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-sm);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -142,25 +143,31 @@ body { background-color: var(--light); }
     justify-content: center;
     z-index: 2;
     font-size: 1.15rem;
-    transition: box-shadow 0.22s, background 0.21s;
+    transition: all var(--transition-base);
+    color: var(--text-dark);
 }
 .elevated-card .wishlist-btn:hover, .elevated-card .wishlist-btn:focus {
-    background: #faf7fc;
-    box-shadow: 0 6px 16px rgba(239,68,68,0.12);
-    color: #ef4444 !important;
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-md);
+    color: var(--danger) !important;
+    transform: scale(1.1);
     outline: none;
+}
+.elevated-card .wishlist-btn.active {
+    color: var(--danger) !important;
+    background: rgba(var(--primary-rgb), 0.1);
 }
 .discount-badge {
     position: absolute;
     left: 18px;
     top: 18px;
     padding: 0.38em 0.82em 0.32em 0.79em;
-    border-radius: .8em;
-    background: linear-gradient(135deg,#ef4444 60%,#c11e43 100%);
-    color: #fff;
+    border-radius: var(--radius-base);
+    background: linear-gradient(135deg, var(--danger) 0%, #A01A2E 100%);
+    color: var(--text-light);
     font-size: .96rem;
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(239,68,68,0.18);
+    box-shadow: var(--shadow-md);
     z-index: 3;
     animation: fadeInCard 0.4s 0.12s ease-in both;
     letter-spacing: .01em;
@@ -170,22 +177,22 @@ body { background-color: var(--light); }
     max-width: 100%;
     height: 210px;
     object-fit: cover;
-    transition: transform .38s cubic-bezier(0.21,0.97,0.32,0.95), box-shadow 0.21s;
-    border-radius: 1.1rem 1.1rem 0 0;
-    background: #fafbff;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    background: var(--bg-warm);
     margin-bottom: 0;
     display: block;
     box-shadow: none;
 }
 .elevated-card:hover img {
-    transform: scale(1.055) rotate(-0.4deg);
-    box-shadow: 0 8px 40px rgba(69,97,242,0.16);
+    transform: scale(1.08);
+    box-shadow: var(--shadow-card-hover);
 }
 
 .card-product-title {
     font-family: 'Inter', 'DM Serif Display', 'Segoe UI', serif;
-    font-weight: 700;
-    color: #16182a;
+    font-weight: 600;
+    color: var(--text-dark);
     font-size: 1.07rem;
     line-height: 1.35;
     margin-top: 1rem;
@@ -201,14 +208,14 @@ body { background-color: var(--light); }
 .card-product-price {
     font-size: 1.18rem;
     font-weight: 700;
-    color: #4461f2;
+    color: var(--primary);
     margin-right: .39em;
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
 .card-product-mrp {
     font-size: 1rem;
     text-decoration: line-through;
-    color: #7a7a90;
+    color: var(--text-muted);
     margin-left: 3px;
     letter-spacing: .01em;
 }
@@ -223,54 +230,60 @@ body { background-color: var(--light); }
 }
 /* Add to Cart Button */
 .btn-elevated-primary {
-    background: linear-gradient(90deg,#4461f2 60%,#3aaed8 100%);
-    color: #fff;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--text-light);
     font-weight: 700;
-    border-radius: 0.85em;
+    border-radius: var(--radius-lg);
     border: none;
     font-size: 1.03rem;
     padding: 0.67em 1.34em;
     margin-top: .22em;
     letter-spacing: .01em;
-    transition: background 0.22s, box-shadow 0.26s, transform 0.15s;
-    box-shadow: 0 4px 16px rgba(69,97,242,0.11);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
     display: inline-block;
     min-width: 0;
     outline: none;
 }
 .btn-elevated-primary:active, .btn-elevated-primary.active, .btn-elevated-primary:focus {
-    background: linear-gradient(87deg,#3550d4,#2b7ca2 100%);
-    box-shadow: 0 8px 38px rgba(69,97,242,0.21);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    box-shadow: var(--shadow-lg);
     transform: scale(.98);
 }
+.btn-elevated-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
 .btn-elevated-primary:disabled {
-    background: #e0e4ed !important;
-    color: #b7b7c7 !important;
+    background: var(--border) !important;
+    color: var(--text-muted) !important;
     cursor: not-allowed;
     box-shadow: none;
 }
 /* No Products State */
 .empty-products-state {
-    background: #f9fafb;
-    border-radius: 1.3rem;
-    box-shadow: 0 2px 8px rgba(40,54,71,0.09);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border);
     padding: 2.8rem 1.2rem 2.4rem 1.2rem;
     max-width: 470px;
     margin: 0 auto;
 }
 .empty-products-state .fa-inbox {
-    color: #d4d8ec;
+    color: var(--border-dark);
     margin-bottom: 1em;
 }
 .empty-products-state .text-muted {
-    color: #8f95b2 !important;
+    color: var(--text-muted) !important;
 }
 
 /* Pagination */
 .premium-pagination .pagination {
-    border-radius: 2em;
-    background: #fff;
-    box-shadow: 0 3px 17px rgba(69,97,242,0.10);
+    border-radius: var(--radius-full);
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border);
     padding: 0.7em 1em;
     display: flex;
 }
@@ -279,7 +292,7 @@ body { background-color: var(--light); }
 }
 .premium-pagination .page-link {
     font-family: inherit;
-    color: #3a3a56;
+    color: var(--text-dark);
     border: none;
     background: none;
     border-radius: 50%;
@@ -290,18 +303,18 @@ body { background-color: var(--light); }
     justify-content: center;
     font-size: 1.07rem;
     font-weight: 600;
-    transition: background 0.19s, color 0.15s, transform 0.16s;
+    transition: all var(--transition-base);
 }
 .premium-pagination .page-item.active .page-link {
-    background: linear-gradient(90deg, #4461f2 60%, #3aaed8 100%);
-    color: #fff !important;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--text-light) !important;
     font-weight: 700;
-    box-shadow: 0 3px 14px rgba(69,97,242,0.13);
+    box-shadow: var(--shadow-md);
     transform: scale(1.05);
 }
 .premium-pagination .page-link:hover, .premium-pagination .page-link:focus {
-    background: #f6f8fc;
-    color: #232355;
+    background: var(--bg-warm);
+    color: var(--primary);
     outline: none;
     text-decoration: none;
     transform: scale(1.07) translateY(-1px);

@@ -1,216 +1,496 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}E-Shop - Premium Online Shopping{% endblock %}
+{% block title %}Premium Fashion Collection - E-Shop{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/landing.css' %}">
 {% endblock %}
-
 {% block content %}
+    <style>
+        .trust-grid {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            align-items: stretch;
+        }
+        .trust-item {
+            flex: 1 1 220px;
+            min-width: 220px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
 
-<!-- Banner Carousel -->
-<div class="container mt-5 mb-6 fade-in">
-    <div id="bannerCarousel" class="carousel slide shadow-lg" data-bs-ride="carousel" data-bs-interval="4000">
+        /* Mobile: make badges very small and fit 4 items in one row without scrolling */
+        @media (max-width: 767px) {
+            .trust-grid {
+                flex-wrap: nowrap;
+                overflow-x: visible; /* ensure no horizontal scrollbar */
+                padding: 6px 4px;
+                gap: 8px;
+                justify-content: space-between;
+            }
+            .trust-item {
+                flex: 0 0 25%;
+                max-width: 25%;
+                min-width: 0;
+                gap: 6px;
+                padding: 6px 4px;
+                box-sizing: border-box;
+            }
+
+            /* make content very small on mobile */
+            .trust-icon {
+                font-size: 14px;
+                width: 28px;
+                height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .trust-title {
+                font-size: 12px;
+                margin: 0;
+                line-height: 1;
+            }
+            .trust-text {
+                font-size: 10px;
+                margin: 0;
+                line-height: 1;
+                opacity: 0.9;
+            }
+
+            /* reduce overall visual weight */
+            .trust-item .trust-content { display: block; }
+        }
+    </style>
+<!-- Hero Banner Section -->
+<section class="hero-section">
+    <div class="hero-carousel" id="heroCarousel">
         {% if banners %}
-        <!-- Indicators -->
-        <div class="carousel-indicators">
+        <div class="hero-slides">
             {% for banner in banners %}
-                <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="{{ forloop.counter0 }}" 
-                    class="{% if forloop.first %}active{% endif %}" 
-                    style="width:10px; height:10px; border-radius:50%; margin:0 4px;"></button>
-            {% endfor %}
-        </div>
-
-        <!-- Slides -->
-        <div class="carousel-inner h-100">
-            {% for banner in banners %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %} h-100">
+            <div class="hero-slide {% if forloop.first %}active{% endif %}">
                 {% if banner.url %}
-                    <a href="{{ banner.url }}" class="d-block h-100">
-                        <img src="{{ banner.image.url }}" 
-                             alt="{{ banner.title|default:'Banner' }}" 
-                             class="d-block w-100 h-100" 
-                             style="object-fit:cover;">
-                    </a>
+                <a href="{{ banner.url }}" class="hero-link">
+                    <img src="{{ banner.image.url }}" alt="{{ banner.title|default:'Fashion Banner' }}" class="hero-image">
+                    <div class="hero-overlay">
+                        <div class="hero-content">
+                            <h1 class="hero-title">{{ banner.title|default:'New Collection' }}</h1>
+                            <p class="hero-subtitle">Discover Premium Style</p>
+                            <button class="hero-cta">Shop Now</button>
+                        </div>
+                    </div>
+                </a>
                 {% else %}
-                    <img src="{{ banner.image.url }}" 
-                         alt="{{ banner.title|default:'Banner' }}" 
-                         class="d-block w-100 h-100" 
-                         style="object-fit:cover;">
+                <img src="{{ banner.image.url }}" alt="{{ banner.title|default:'Fashion Banner' }}" class="hero-image">
+                <div class="hero-overlay">
+                    <div class="hero-content">
+                        <h1 class="hero-title">{{ banner.title|default:'New Collection' }}</h1>
+                        <p class="hero-subtitle">Discover Premium Style</p>
+                        <button class="hero-cta">Shop Now</button>
+                    </div>
+                </div>
                 {% endif %}
             </div>
             {% endfor %}
         </div>
 
-        <!-- Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon carousel-icon"></span>
+        <!-- Navigation Dots -->
+        <div class="hero-dots">
+            {% for banner in banners %}
+            <button class="hero-dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}" aria-label="Slide {{ forloop.counter }}"></button>
+            {% endfor %}
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button class="hero-arrow hero-arrow-prev" aria-label="Previous slide">
+            <i class="fas fa-chevron-left"></i>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon carousel-icon"></span>
+        <button class="hero-arrow hero-arrow-next" aria-label="Next slide">
+            <i class="fas fa-chevron-right"></i>
         </button>
         {% else %}
-            <div class="d-flex align-items-center justify-content-center h-100 banner-empty">
-                <p class="text-muted">No banners available</p>
-            </div>
+        <div class="hero-empty">
+            <p>No banners available</p>
+        </div>
         {% endif %}
     </div>
-</div>
-
-<!-- Features -->
-<section class="features-section fade-in luxury-section">
+</section>
+<!-- Featured Categories -->
+<section class="categories-section">
     <div class="container">
-        <div class="features-row">
-            <div class="feature-item">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">
-                        <i class="fas fa-shipping-fast"></i>
+        <div class="section-header-modern">
+            <h2 class="section-title-modern">Shop by Category</h2>
+            <a href="/categories/" class="view-all-modern">View All Collections <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <div class="categories-train-wrapper" style="position:relative;">
+        <!-- Manual controls (hidden by default, shown on small screens via JS) -->
+        <button class="categories-scroll-btn categories-scroll-prev" aria-label="Scroll left"
+                style="display:none; position:absolute; left:8px; top:50%; transform:translateY(-50%); z-index:12; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.95); border:none; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.08); cursor:pointer;">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <button class="categories-scroll-btn categories-scroll-next" aria-label="Scroll right"
+                style="display:none; position:absolute; right:8px; top:50%; transform:translateY(-50%); z-index:12; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.95); border:none; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.08); cursor:pointer;">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <div class="categories-train">
+            {% for category in categories %}
+            <a href="{{ category.url }}" class="category-card-train">
+                <div class="category-image-train">
+                    <img src="{{ category.image_url }}" alt="{{ category.name }}" loading="lazy">
+                    <div class="category-overlay-train">
+                        <span class="category-cta-train">Explore</span>
                     </div>
                 </div>
-                <h6 class="feature-title">Free Shipping</h6>
-                <p class="feature-desc">On orders over $50</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
+                <h3 class="category-name-train">{{ category.name }}</h3>
+            </a>
+            {% endfor %}
+            
+            <!-- Duplicate for infinite scroll (CSS animation uses 50% translate) -->
+            {% for category in categories %}
+            <a href="{{ category.url }}" class="category-card-train">
+                <div class="category-image-train">
+                    <img src="{{ category.image_url }}" alt="{{ category.name }}" loading="lazy">
+                    <div class="category-overlay-train">
+                        <span class="category-cta-train">Explore</span>
                     </div>
                 </div>
-                <h6 class="feature-title">Secure Payment</h6>
-                <p class="feature-desc">100% protected</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">
-                        <i class="fas fa-undo"></i>
-                    </div>
-                </div>
-                <h6 class="feature-title">Easy Returns</h6>
-                <p class="feature-desc">30 days guarantee</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon-wrapper">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                </div>
-                <h6 class="feature-title">24/7 Support</h6>
-                <p class="feature-desc">Dedicated support</p>
-            </div>
+                <h3 class="category-name-train">{{ category.name }}</h3>
+            </a>
+            {% endfor %}
         </div>
     </div>
 </section>
 
-<!-- Categories -->
-<section class="container luxury-section fade-in">
-    <div class="section-header">
-        <h2 class="section-title position-relative pb-2">
-            Shop by Category
-            <span class="section-underline"></span>
-        </h2>
-        <a href="/categories/" class="view-all-link">
-            View All <i class="fas fa-arrow-right"></i>
-        </a>
-    </div>
-    <div class="categories-grid">
-        {% for category in categories %}
-        <a href="{{ category.url }}" class="category-card-link">
-            <div class="category-card hover-lift">
-                <div class="category-image-wrapper">
-                    <img src="{{ category.image_url }}" alt="{{ category.name }}" class="category-img">
+<!-- Trust Badges -->
+<section class="trust-section">
+
+
+    <div class="container">
+        <div class="trust-grid">
+            <div class="trust-item">
+                <div class="trust-icon">
+                    <i class="fas fa-shipping-fast"></i>
                 </div>
-                <h6 class="category-name">{{ category.name }}</h6>
+                <div class="trust-content">
+                    <h4 class="trust-title">Free Shipping</h4>
+                    <p class="trust-text">On orders over $100</p>
+                </div>
             </div>
-        </a>
-        {% empty %}
-        <div class="col-12">
-            <p class="text-center text-muted">No categories available</p>
+            <div class="trust-item">
+                <div class="trust-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="trust-content">
+                    <h4 class="trust-title">Secure Payment</h4>
+                    <p class="trust-text">100% protected</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">
+                    <i class="fas fa-undo-alt"></i>
+                </div>
+                <div class="trust-content">
+                    <h4 class="trust-title">Easy Returns</h4>
+                    <p class="trust-text">30-day policy</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="trust-content">
+                    <h4 class="trust-title">24/7 Support</h4>
+                    <p class="trust-text">Dedicated care</p>
+                </div>
+            </div>
         </div>
-        {% endfor %}
     </div>
 </section>
 
 <!-- New Arrivals -->
-<section class="container luxury-section fade-in">
-    <div class="section-header">
-        <h2 class="section-title position-relative pb-2">
-            New Arrivals
-            <span class="section-underline"></span>
-        </h2>
-        <a href="{% url 'product_list' %}?sort=newest" class="view-all-link">
-            View All <i class="fas fa-arrow-right"></i>
-        </a>
-    </div>
-    <div class="row g-4">
-        {% for product in new_arrivals %}
-        <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-            <div class="product-card hover-lift h-100 shadow-sm position-relative">
-                <!-- Wishlist Button -->
-                <button class="wishlist-btn position-absolute border-0 rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
-                        data-product-id="{{ product.id }}">
-                    <i class="far fa-heart"></i>
-                </button>
+<section class="products-section">
+    <div class="container">
+        <div class="section-header-modern">
+            <h2 class="section-title-modern">New Arrivals</h2>
+            <a href="{% url 'product_list' %}?sort=newest" class="view-all-modern">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
 
-                <a href="{{ product.url }}" class="product-link text-decoration-none d-block flex-grow-1">
-                    <div class="position-relative overflow-hidden product-image-wrapper">
-                        <img src="{{ product.image_url }}" alt="{{ product.name }}" 
-                             class="product-img img-fluid w-100">
-                        
-                        <div class="badges-row">
-                            {% if product.discount_percent > 0 %}
-                            <div class="discount-badge">
-                                -{{ product.discount_percent }}%
-                            </div>
-                            {% else %}
-                            <div></div>
-                            {% endif %}
-                            <div class="rating-badge">
-                                <i class="fas fa-star"></i> <span>{{ product.avg_rating }}</span>
-                            </div>
+        <div class="products-grid-modern">
+            {% for product in new_arrivals %}
+            <article class="product-card-modern">
+                <!-- Product Image -->
+                <div class="product-image-container">
+                    <a href="{{ product.url }}" class="product-link-modern">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image-modern" loading="lazy">
+                        <div class="product-quick-view">
+                            <span>Quick View</span>
                         </div>
+                    </a>
+
+                    <!-- Badges -->
+                    <div class="product-badges">
+                        {% if product.discount_percent > 0 %}
+                        <span class="badge-sale">-{{ product.discount_percent }}%</span>
+                        {% endif %}
+                        {% if not product.in_stock %}
+                        <span class="badge-soldout">Sold Out</span>
+                        {% endif %}
                     </div>
-                    
-                    <div class="product-info p-3 p-md-4">
-                        <h6 class="product-name fw-semibold mb-1 text-truncate">{{ product.name }}</h6>
-                        
-                        <div class="product-price-wrapper mb-2">
-                            <span class="product-price fw-bold">₹{{ product.price }}</span>
-                            {% if product.mrp > product.price %}
-                            <span class="product-mrp text-muted text-decoration-line-through">₹{{ product.mrp }}</span>
-                            {% endif %}
-                        </div>
+
+                    <!-- Wishlist -->
+                    <button class="wishlist-button" data-product-id="{{ product.id }}" aria-label="Add to wishlist">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-details-modern">
+                    <a href="{{ product.url }}" class="product-name-link">
+                        <h3 class="product-name-modern">{{ product.name }}</h3>
+                    </a>
+
+                    <div class="product-rating">
+                        {% for i in product.stars_full %}
+                        <i class="fas fa-star"></i>
+                        {% endfor %}
+                        {% for i in product.stars_half %}
+                        <i class="fas fa-star-half-alt"></i>
+                        {% endfor %}
+                        {% for i in product.stars_empty %}
+                        <i class="far fa-star"></i>
+                        {% endfor %}
                     </div>
-                </a>
-                
-                <button class="btn btn-primary btn-premium btn-add-cart w-100 fw-semibold mx-3 mb-3 {% if not product.in_stock %}btn-secondary disabled{% endif %}" 
-                        data-product-id="{{ product.id }}">
-                    {% if product.in_stock %}
-                    <i class="fas fa-shopping-cart me-1"></i> Add to Cart
-                    {% else %}
-                    Out of Stock
-                    {% endif %}
-                </button>
+
+                    <div class="product-price-modern">
+                        <span class="price-current">₹{{ product.price }}</span>
+                        {% if product.mrp > product.price %}
+                        <span class="price-original">₹{{ product.mrp }}</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Add to Cart Button -->
+                    <button class="add-to-cart-modern {% if not product.in_stock %}disabled{% endif %}" 
+                            data-product-id="{{ product.id }}"
+                            {% if not product.in_stock %}disabled{% endif %}>
+                        {% if product.in_stock %}
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Add to Cart</span>
+                        {% else %}
+                        <span>Out of Stock</span>
+                        {% endif %}
+                    </button>
+                </div>
+            </article>
+            {% empty %}
+            <div class="empty-state">
+                <p>No new arrivals available</p>
             </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <div class="col-12">
-            <p class="text-center text-muted">No new arrivals available</p>
-        </div>
-        {% endfor %}
     </div>
 </section>
 
-<!-- Newsletter -->
-<section class="container luxury-section fade-in">
-    <div class="newsletter-wrapper">
-        <div class="newsletter-content">
-            <h3 class="newsletter-title">Subscribe & Get 10% Off</h3>
-            <p class="newsletter-text">Join our newsletter for exclusive deals and new arrivals</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Enter your email" class="newsletter-input" required>
-                <button type="submit" class="newsletter-btn">Subscribe</button>
-            </form>
+<!-- Best Selling Section -->
+<section class="products-section">
+    <div class="container">
+        <div class="section-header-modern">
+            <h2 class="section-title-modern">Best Selling</h2>
+            <a href="{% url 'product_list' %}?sort=bestsellers" class="view-all-modern">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="products-grid-modern">
+            {% for product in best_selling %}
+            <article class="product-card-modern">
+                <!-- Product Image -->
+                <div class="product-image-container">
+                    <a href="{{ product.url }}" class="product-link-modern">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image-modern" loading="lazy">
+                        <div class="product-quick-view">
+                            <span>Quick View</span>
+                        </div>
+                    </a>
+
+                    <!-- Badges -->
+                    <div class="product-badges">
+                        {% if product.discount_percent > 0 %}
+                        <span class="badge-sale">-{{ product.discount_percent }}%</span>
+                        {% endif %}
+                        {% if not product.in_stock %}
+                        <span class="badge-soldout">Sold Out</span>
+                        {% endif %}
+                        {% if product.is_bestseller %}
+                        <span class="badge-bestseller">Best Seller</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Wishlist -->
+                    <button class="wishlist-button" data-product-id="{{ product.id }}" aria-label="Add to wishlist">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-details-modern">
+                    <a href="{{ product.url }}" class="product-name-link">
+                        <h3 class="product-name-modern">{{ product.name }}</h3>
+                    </a>
+
+                    <div class="product-rating">
+                        {% for i in product.stars_full %}
+                        <i class="fas fa-star"></i>
+                        {% endfor %}
+                        {% for i in product.stars_half %}
+                        <i class="fas fa-star-half-alt"></i>
+                        {% endfor %}
+                        {% for i in product.stars_empty %}
+                        <i class="far fa-star"></i>
+                        {% endfor %}
+                    </div>
+
+                    <div class="product-price-modern">
+                        <span class="price-current">₹{{ product.price }}</span>
+                        {% if product.mrp > product.price %}
+                        <span class="price-original">₹{{ product.mrp }}</span>
+                        {% endif %}
+                    </div>
+
+                    <button class="add-to-cart-modern {% if not product.in_stock %}disabled{% endif %}" 
+                            data-product-id="{{ product.id }}"
+                            {% if not product.in_stock %}disabled{% endif %}>
+                        {% if product.in_stock %}
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Add to Cart</span>
+                        {% else %}
+                        <span>Out of Stock</span>
+                        {% endif %}
+                    </button>
+                </div>
+            </article>
+            {% empty %}
+            <div class="empty-state">
+                <p>No best selling products available</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Top Rated Section -->
+<section class="products-section">
+    <div class="container">
+        <div class="section-header-modern">
+            <h2 class="section-title-modern">Top Rated</h2>
+            <a href="{% url 'product_list' %}?sort=rating" class="view-all-modern">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="products-grid-modern">
+            {% for product in top_rated %}
+            <article class="product-card-modern">
+                <!-- Product Image -->
+                <div class="product-image-container">
+                    <a href="{{ product.url }}" class="product-link-modern">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image-modern" loading="lazy">
+                        <div class="product-quick-view">
+                            <span>Quick View</span>
+                        </div>
+                    </a>
+
+                    <!-- Badges -->
+                    <div class="product-badges">
+                        {% if product.discount_percent > 0 %}
+                        <span class="badge-sale">-{{ product.discount_percent }}%</span>
+                        {% endif %}
+                        {% if not product.in_stock %}
+                        <span class="badge-soldout">Sold Out</span>
+                        {% endif %}
+                        {% if product.rating >= 4.5 %}
+                        <span class="badge-toprated">Top Rated</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Wishlist -->
+                    <button class="wishlist-button" data-product-id="{{ product.id }}" aria-label="Add to wishlist">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-details-modern">
+                    <a href="{{ product.url }}" class="product-name-link">
+                        <h3 class="product-name-modern">{{ product.name }}</h3>
+                    </a>
+
+                    <div class="product-rating">
+                        {% for i in product.stars_full %}
+                        <i class="fas fa-star"></i>
+                        {% endfor %}
+                        {% for i in product.stars_half %}
+                        <i class="fas fa-star-half-alt"></i>
+                        {% endfor %}
+                        {% for i in product.stars_empty %}
+                        <i class="far fa-star"></i>
+                        {% endfor %}
+                    </div>
+
+                    <div class="product-price-modern">
+                        <span class="price-current">₹{{ product.price }}</span>
+                        {% if product.mrp > product.price %}
+                        <span class="price-original">₹{{ product.mrp }}</span>
+                        {% endif %}
+                    </div>
+
+                    <button class="add-to-cart-modern {% if not product.in_stock %}disabled{% endif %}" 
+                            data-product-id="{{ product.id }}"
+                            {% if not product.in_stock %}disabled{% endif %}>
+                        {% if product.in_stock %}
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Add to Cart</span>
+                        {% else %}
+                        <span>Out of Stock</span>
+                        {% endif %}
+                    </button>
+                </div>
+            </article>
+            {% empty %}
+            <div class="empty-state">
+                <p>No top rated products available</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section-modern">
+    <div class="container">
+        <div class="newsletter-container">
+            <div class="newsletter-content-modern">
+                <h2 class="newsletter-title-modern">Join Our Fashion Community</h2>
+                <p class="newsletter-subtitle">Subscribe for exclusive offers, style tips, and early access to new collections</p>
+                
+                <form class="newsletter-form-modern" id="newsletterForm">
+                    <div class="newsletter-input-wrapper">
+                        <input type="email" 
+                               placeholder="Enter your email address" 
+                               class="newsletter-input-modern" 
+                               required
+                               aria-label="Email address">
+                        <button type="submit" class="newsletter-submit">
+                            Subscribe
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <p class="newsletter-disclaimer">By subscribing, you agree to our Privacy Policy and consent to receive updates</p>
+            </div>
         </div>
     </div>
 </section>
@@ -219,84 +499,207 @@
 
 {% block extra_js %}
 <script>
-    // Add to cart with premium animation
-    document.querySelectorAll('.btn-add-cart').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            if (this.classList.contains('disabled')) return;
-            
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const originalHTML = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-check me-1"></i> Added!';
-            this.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            this.style.transform = 'scale(0.95)';
-            
-            setTimeout(() => {
-                this.innerHTML = originalHTML;
-                this.style.background = '';
-                this.style.transform = '';
-            }, 2000);
-        });
-    });
+// Categories Scroll Control
+(function() {
+    const categoriesWrapper = document.querySelector('.categories-train-wrapper');
+    const categoriesTrain = document.querySelector('.categories-train');
+    const prevBtn = document.querySelector('.categories-scroll-prev');
+    const nextBtn = document.querySelector('.categories-scroll-next');
 
-    // Wishlist toggle with animation
-    document.querySelectorAll('.wishlist-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const icon = this.querySelector('i');
-            const isFilled = icon.classList.contains('fas');
-            
-            if (isFilled) {
-                icon.classList.remove('fas');
-                icon.classList.add('far');
-                this.classList.remove('active');
+    if (categoriesWrapper && categoriesTrain && prevBtn && nextBtn) {
+        // Show scroll buttons on mobile and tablet
+        if (window.innerWidth <= 991) {
+            prevBtn.style.display = 'flex';
+            nextBtn.style.display = 'flex';
+        }
+
+        // Handle scroll buttons
+        prevBtn.addEventListener('click', () => {
+            categoriesTrain.style.animationPlayState = 'paused';
+            categoriesWrapper.scrollBy({
+                left: -200,
+                behavior: 'smooth'
+            });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            categoriesTrain.style.animationPlayState = 'paused';
+            categoriesWrapper.scrollBy({
+                left: 200,
+                behavior: 'smooth'
+            });
+        });
+
+        // Resume animation when scroll ends
+        let scrollTimeout;
+        categoriesWrapper.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                categoriesTrain.style.animationPlayState = 'running';
+            }, 1000);
+        });
+
+        // Update button visibility on resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 991) {
+                prevBtn.style.display = 'flex';
+                nextBtn.style.display = 'flex';
             } else {
-                icon.classList.remove('far');
-                icon.classList.add('fas');
-                this.classList.add('active');
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
             }
         });
-    });
+    }
+})();
 
-    // Smooth scroll reveal on scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+// Hero Carousel
+(function() {
+    const carousel = document.getElementById('heroCarousel');
+    if (!carousel) return;
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
+    const slides = carousel.querySelectorAll('.hero-slide');
+    const dots = carousel.querySelectorAll('.hero-dot');
+    const prevBtn = carousel.querySelector('.hero-arrow-prev');
+    const nextBtn = carousel.querySelector('.hero-arrow-next');
+    
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+    let autoplayInterval;
 
-    document.querySelectorAll('.fade-in').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 0.6s ease';
-        observer.observe(el);
-    });
-
-    // Newsletter form submission
-    document.querySelector('.newsletter-gradient form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const btn = this.querySelector('button');
-        const originalHTML = btn.innerHTML;
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
         
-        btn.innerHTML = '<i class="fas fa-check"></i> Subscribed!';
-        btn.disabled = true;
+        currentSlide = (index + totalSlides) % totalSlides;
+        
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active');
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+        showSlide(currentSlide - 1);
+    }
+
+    function startAutoplay() {
+        autoplayInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoplay() {
+        clearInterval(autoplayInterval);
+    }
+
+    // Event Listeners
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        nextSlide();
+        stopAutoplay();
+        startAutoplay();
+    });
+
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        prevSlide();
+        stopAutoplay();
+        startAutoplay();
+    });
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            showSlide(index);
+            stopAutoplay();
+            startAutoplay();
+        });
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+
+    startAutoplay();
+})();
+
+// Add to Cart
+document.querySelectorAll('.add-to-cart-modern').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        if (this.classList.contains('disabled')) return;
+        
+        e.preventDefault();
+        
+        const originalContent = this.innerHTML;
+        this.classList.add('added');
+        this.innerHTML = '<i class="fas fa-check"></i><span>Added to Cart</span>';
         
         setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.disabled = false;
-            this.reset();
-        }, 3000);
+            this.innerHTML = originalContent;
+            this.classList.remove('added');
+        }, 2000);
     });
+});
+
+// Wishlist
+document.querySelectorAll('.wishlist-button').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const icon = this.querySelector('i');
+        this.classList.toggle('active');
+        
+        if (this.classList.contains('active')) {
+            icon.classList.remove('far');
+            icon.classList.add('fas');
+        } else {
+            icon.classList.remove('fas');
+            icon.classList.add('far');
+        }
+    });
+});
+
+// Newsletter
+document.getElementById('newsletterForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const submitBtn = this.querySelector('.newsletter-submit');
+    const originalContent = submitBtn.innerHTML;
+    
+    submitBtn.innerHTML = '<i class="fas fa-check"></i> Subscribed!';
+    submitBtn.disabled = true;
+    
+    setTimeout(() => {
+        submitBtn.innerHTML = originalContent;
+        submitBtn.disabled = false;
+        this.reset();
+    }, 3000);
+});
+
+// Smooth Scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+
+// Intersection Observer for fade-in animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.products-section, .categories-section, .trust-section').forEach(el => {
+    observer.observe(el);
+});
 </script>
 {% endblock %}

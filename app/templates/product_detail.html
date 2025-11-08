@@ -38,11 +38,11 @@
 
     <!-- Product Info -->
     <div class="col-md-6">
-      <div class="luxury-card">
-        <h1 class="h3 fw-bold">{{ product.name }}</h1>
+      <div class="luxury-card" style="background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-card);">
+        <h1 class="h3 fw-bold" style="color: var(--text-dark);">{{ product.name }}</h1>
 
         <div class="d-flex align-items-center gap-2 my-3">
-          <div class="text-warning">
+          <div style="color: var(--gold);">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
           </div>
           <span class="text-muted">(4.5) 128 Reviews</span>
@@ -50,14 +50,14 @@
 
         {% with variant=product.variants.first %}
         <div class="d-flex align-items-baseline gap-3 my-3">
-          <span class="fw-bold fs-3 text-dark">₹{{ variant.price }}</span>
+          <span class="fw-bold fs-3" style="color: var(--primary);">₹{{ variant.price }}</span>
           {% if variant.mrp > variant.price %}
           <span class="text-muted text-decoration-line-through fs-6">₹{{ variant.mrp }}</span>
-          <span class="badge bg-danger fw-bold">{{ variant.discount_percent }}% OFF</span>
+          <span class="badge fw-bold" style="background: linear-gradient(135deg, var(--danger) 0%, #A01A2E 100%); color: white;">{{ variant.discount_percent }}% OFF</span>
           {% endif %}
         </div>
 
-        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded {% if variant.available_stock > 0 %}bg-success text-white{% else %}bg-danger text-white{% endif %} fw-semibold mb-3">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded fw-semibold mb-3 {% if variant.available_stock > 0 %}" style="background: rgba(56, 142, 60, 0.1); color: #1a7f37; border: 1px solid rgba(56, 142, 60, 0.3);{% else %}" style="background: rgba(196, 30, 58, 0.1); color: #C41E3A; border: 1px solid rgba(196, 30, 58, 0.3);{% endif %}">
           <i class="fas {% if variant.available_stock > 0 %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
           {% if variant.available_stock > 0 %}In Stock ({{ variant.available_stock }}){% else %}Out of Stock{% endif %}
         </div>
@@ -68,9 +68,9 @@
           <label class="form-label fw-semibold">Select Color:</label>
           <div class="d-flex flex-wrap gap-2" id="colorOptions">
             {% for variant in variants %}
-            <div class="border rounded px-3 py-2 {% if forloop.first %}border-primary bg-primary text-white{% else %}border-secondary{% endif %} {% if variant.available_stock <= 0 %}opacity-50{% endif %}"
+            <div class="border rounded px-3 py-2 {% if forloop.first %}" style="{% if forloop.first %}background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; border-color: var(--primary);{% else %}background: var(--bg-surface); border-color: var(--border); color: var(--text-dark);{% endif %} {% if variant.available_stock <= 0 %}opacity: 0.5;{% endif %} cursor: pointer; transition: all var(--transition-base);"
                  data-price="{{ variant.price }}" data-mrp="{{ variant.mrp }}" data-stock="{{ variant.available_stock }}"
-                 data-discount="{{ variant.discount_percent }}" style="cursor:pointer;">
+                 data-discount="{{ variant.discount_percent }}" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='scale(1.05)'" onmouseout="this.style.borderColor='{% if forloop.first %}var(--primary){% else %}var(--border){% endif %}'; this.style.transform='scale(1)'">
               {{ variant.color }}
             </div>
             {% endfor %}
@@ -90,9 +90,9 @@
 
         <!-- Action Buttons -->
         <div class="d-flex gap-2 flex-wrap mt-3">
-          <button class="btn btn-primary flex-grow-1"><i class="fas fa-shopping-cart me-2"></i>Add to Cart</button>
-          <button class="btn btn-warning flex-grow-1 text-white"><i class="fas fa-bolt me-2"></i>Buy Now</button>
-          <button class="btn btn-outline-secondary" style="width:50px; height:50px;"><i class="far fa-heart"></i></button>
+          <button class="btn btn-primary flex-grow-1" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border: none; box-shadow: var(--shadow-md);"><i class="fas fa-shopping-cart me-2"></i>Add to Cart</button>
+          <button class="btn flex-grow-1" style="background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); color: var(--text-dark); border: none; box-shadow: var(--shadow-gold);"><i class="fas fa-bolt me-2"></i>Buy Now</button>
+          <button class="btn" style="width:50px; height:50px; background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-dark);"><i class="far fa-heart"></i></button>
         </div>
 
         <!-- Description -->
@@ -107,17 +107,23 @@
   <!-- Related Products -->
   {% if related_products %}
   <div class="luxury-section mt-6">
-    <h2 class="h5 fw-bold mb-3">Similar Products</h2>
+    <h2 class="h5 fw-bold mb-3" style="color: var(--text-dark);">Similar Products</h2>
     <div class="d-flex gap-3 overflow-auto pb-2">
       {% for product in related_products %}
-      <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none text-dark flex-shrink-0" style="width:200px;">
-        {% if product.images.first %}
-        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-100 rounded mb-2" style="height:180px; object-fit:cover;">
-        {% else %}
-        <img src="{% static 'images/no-image.jpg' %}" alt="{{ product.name }}" class="w-100 rounded mb-2" style="height:180px; object-fit:cover;">
-        {% endif %}
-        <h6 class="fw-semibold text-truncate mb-1">{{ product.name }}</h6>
-        <div>₹{{ product.variants.first.price }}</div>
+      <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none flex-shrink-0 premium-product-card" style="width:200px; min-width: 200px;">
+        <div class="premium-product-image-container">
+          {% if product.images.first %}
+          <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="premium-product-image">
+          {% else %}
+          <img src="{% static 'images/no-image.jpg' %}" alt="{{ product.name }}" class="premium-product-image">
+          {% endif %}
+        </div>
+        <div class="premium-product-details">
+          <h6 class="premium-product-name">{{ product.name }}</h6>
+          <div class="premium-product-price-container">
+            <span class="premium-product-price">₹{{ product.variants.first.price }}</span>
+          </div>
+        </div>
       </a>
       {% endfor %}
     </div>
