@@ -300,11 +300,22 @@ def product_detail(request, slug):
     )
 
     # Track user view (optional, for analytics)
-    if request.user.is_authenticated:
-        product.views.create(user=request.user)
-    else:
-        session_id = request.session.session_key or request.session.create()
-        product.views.create(session_id=session_id)
+    try:
+        if request.user.is_authenticated:
+            product.views.create(user=request.user)
+        else:
+            # Ensure session exists and has a key
+            if not request.session.session_key:
+                request.session.create()
+            # Save session to ensure session_key is available
+            request.session.save()
+            session_id = request.session.session_key
+            if session_id:
+                product.views.create(session_id=session_id)
+    except Exception as e:
+        # Silently fail view tracking to not break the page
+        # Log error in production if needed
+        pass
 
     # Get latest 50 products in same category (excluding the current one)
     related_products = (

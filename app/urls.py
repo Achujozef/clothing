@@ -1,9 +1,7 @@
-from django.contrib import admin
 from django.urls import path, include
 from app.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # Google login
     path('register/', UserRegisterView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),

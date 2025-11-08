@@ -1,0 +1,274 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/custom_admin.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+        <div class="welcome-content">
+            <h1>👋 Welcome back, {{ user.first_name|default:user.username }}!</h1>
+            <p>Here's what's happening with your store today</p>
+        </div>
+        <div class="quick-date">
+            <i class="fas fa-calendar"></i> {{ "now"|date:"l, F j, Y" }}
+        </div>
+    </div>
+
+    <!-- Stats Cards Grid -->
+    <div class="stats-grid">
+        <!-- Orders Today -->
+        <div class="stat-card stat-card-blue">
+            <div class="stat-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ today_orders }}</h3>
+                <p>Orders Today</p>
+            </div>
+            <div class="stat-trend">
+                <i class="fas fa-arrow-up"></i> +12%
+            </div>
+        </div>
+
+        <!-- Pending Orders -->
+        <div class="stat-card stat-card-orange">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ pending_orders }}</h3>
+                <p>Pending Orders</p>
+            </div>
+            <a href="{% url 'admin:app_order_changelist' %}?status__exact=pending" class="stat-action">
+                <i class="fas fa-arrow-right"></i> View All
+            </a>
+        </div>
+
+        <!-- Week Revenue -->
+        <div class="stat-card stat-card-green">
+            <div class="stat-icon">
+                <i class="fas fa-rupee-sign"></i>
+            </div>
+            <div class="stat-content">
+                <h3>₹{{ week_revenue|floatformat:0 }}</h3>
+                <p>This Week</p>
+            </div>
+            <div class="stat-trend">
+                <i class="fas fa-arrow-up"></i> +8%
+            </div>
+        </div>
+
+        <!-- Month Revenue -->
+        <div class="stat-card stat-card-purple">
+            <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+                <h3>₹{{ month_revenue|floatformat:0 }}</h3>
+                <p>This Month</p>
+            </div>
+            <div class="stat-trend">
+                <i class="fas fa-arrow-up"></i> +15%
+            </div>
+        </div>
+
+        <!-- Total Customers -->
+        <div class="stat-card stat-card-pink">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ total_customers }}</h3>
+                <p>Total Customers</p>
+            </div>
+            <div class="stat-badge">
+                +{{ new_customers_week }} this week
+            </div>
+        </div>
+
+        <!-- Low Stock Alert -->
+        <div class="stat-card stat-card-red">
+            <div class="stat-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ low_stock_items }}</h3>
+                <p>Low Stock Items</p>
+            </div>
+            <a href="{% url 'admin:app_inventory_changelist' %}" class="stat-action">
+                <i class="fas fa-arrow-right"></i> Check Now
+            </a>
+        </div>
+
+        <!-- Pending Reviews -->
+        <div class="stat-card stat-card-yellow">
+            <div class="stat-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ pending_reviews }}</h3>
+                <p>Pending Reviews</p>
+            </div>
+            <a href="{% url 'admin:app_review_changelist' %}?approved__exact=0" class="stat-action">
+                <i class="fas fa-arrow-right"></i> Review
+            </a>
+        </div>
+
+        <!-- Total Orders -->
+        <div class="stat-card stat-card-indigo">
+            <div class="stat-icon">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ total_orders }}</h3>
+                <p>Total Orders</p>
+            </div>
+            <a href="{% url 'admin:app_order_changelist' %}" class="stat-action">
+                <i class="fas fa-arrow-right"></i> View All
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+        <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+        <div class="quick-actions-grid">
+            <a href="{% url 'admin:app_product_add' %}" class="quick-action-btn">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Product</span>
+            </a>
+            <a href="{% url 'admin:app_order_changelist' %}" class="quick-action-btn">
+                <i class="fas fa-list"></i>
+                <span>View Orders</span>
+            </a>
+            <a href="{% url 'admin:app_coupon_add' %}" class="quick-action-btn">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Create Coupon</span>
+            </a>
+            <a href="{% url 'admin:app_inventory_changelist' %}" class="quick-action-btn">
+                <i class="fas fa-warehouse"></i>
+                <span>Manage Stock</span>
+            </a>
+            <a href="{% url 'admin:app_user_changelist' %}" class="quick-action-btn">
+                <i class="fas fa-user-friends"></i>
+                <span>View Customers</span>
+            </a>
+            <a href="{% url 'admin:app_review_changelist' %}" class="quick-action-btn">
+                <i class="fas fa-comments"></i>
+                <span>Reviews</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="recent-orders-section">
+        <div class="section-header">
+            <h2><i class="fas fa-shopping-bag"></i> Recent Orders</h2>
+            <a href="{% url 'admin:app_order_changelist' %}" class="view-all-btn">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        
+        <div class="orders-table-container">
+            <table class="recent-orders-table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td>
+                            <span class="order-number">#{{ order.id|slice:":8"|upper }}</span>
+                        </td>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">{{ order.user.username.0|upper }}</div>
+                                <div>
+                                    <strong>{{ order.user.username }}</strong>
+                                    <small>{{ order.user.email }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="item-count">{{ order.items.count }} items</span>
+                        </td>
+                        <td>
+                            <strong class="amount">₹{{ order.total|floatformat:2 }}</strong>
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ order.status }}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="order-date">{{ order.placed_at|date:"M d, Y" }}</span>
+                            <small>{{ order.placed_at|date:"h:i A" }}</small>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'admin:app_order_change' order.id %}" class="btn-view" title="View Order">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button onclick="quickStatusUpdate('{{ order.id }}')" class="btn-edit" title="Update Status">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="text-align:center;padding:40px;">
+                            <i class="fas fa-inbox" style="font-size:48px;color:#95a5a6;"></i>
+                            <p style="color:#7f8c8d;margin-top:15px;">No orders yet</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Status Update Modal -->
+<div id="statusModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Update Order Status</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Select new status for order <strong id="modalOrderId"></strong>:</p>
+            <select id="statusSelect" class="status-select">
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="refunded">Refunded</option>
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal()" class="btn-cancel">Cancel</button>
+            <button onclick="confirmStatusUpdate()" class="btn-confirm">Update Status</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
