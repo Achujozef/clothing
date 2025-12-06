@@ -1,158 +1,95 @@
-/* Auth shared styles for login and register */
+/* Auth pages */
 
-/* Use theme variables declared in base.css :root */
-
-body {
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  margin: 0;
-  padding: 0;
+.auth-page {
+    padding: 40px 0 70px;
+    display: grid;
+    place-items: center;
 }
 
-/* Cards */
-.login-card, .register-card {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-card-hover);
-  overflow: hidden;
-  width: 95%;
-  max-width: 480px;
-  margin: 1rem;
-}
-.login-card { max-width: 450px; }
-
-/* Headers */
-.login-header, .register-header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: var(--text-light);
-  text-align: center;
-  padding: 2rem;
-}
-.login-header h4, .register-header h4 { 
-  margin:0; 
-  font-weight:700; 
-  letter-spacing:1px; 
-  font-size:1.6rem;
-}
-.login-header p, .register-header p {
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.9);
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
 }
 
-.login-body, .register-body { padding: 2rem; }
+.auth-card h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
 
-/* Inputs */
+.auth-card p {
+    color: var(--text-light);
+    margin-bottom: 16px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
 .form-control {
-  border-radius: var(--radius-lg); 
-  border: 1px solid var(--input-border); 
-  padding: .75rem;
-  transition: all var(--transition-base);
-  background: var(--bg-surface);
-}
-.form-control:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
-  outline: none;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
 }
 
-/* Buttons */
-.btn-brand {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: var(--text-light);
-  border: none;
-  border-radius: var(--radius-lg);
-  width: 100%;
-  padding: .75rem;
-  font-weight: 700;
-  font-size: 1rem;
-  transition: all var(--transition-base);
-  box-shadow: var(--shadow-md);
-}
-.btn-brand:hover { 
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  color: var(--text-light);
-}
-.google-btn {
-  background: var(--bg-surface);
-  border: 1px solid var(--input-border);
-  border-radius: var(--radius-lg);
-  width: 100%;
-  padding: .75rem;
-  color: var(--text-dark);
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  transition: all var(--transition-base);
-}
-.google-btn:hover { 
-  background: var(--bg-warm);
-  border-color: var(--primary);
+.form-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-.text-muted a { 
-  color: var(--primary); 
-  text-decoration: none; 
-  font-weight: 600;
-}
-.text-muted a:hover {
-  color: var(--primary-dark);
+.info-text {
+    font-size: 13px;
+    color: var(--text-light);
 }
 
-/* Tabs */
-.tab-toggle {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-  gap: 1rem;
-}
-.tab-toggle button {
-  background: none;
-  border: none;
-  font-weight: 600;
-  color: var(--text-muted);
-  transition: all var(--transition-base);
-  font-size: 0.95rem;
-}
-.tab-toggle button.active {
-  color: var(--primary);
-  border-bottom: 2px solid var(--primary);
-  padding-bottom: 2px;
+.otp-message {
+    font-size: 13px;
+    color: var(--text-dark);
+    margin-top: 8px;
 }
 
-/* Messages */
-.alert {
-  border-radius: var(--radius-lg);
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  border: 1px solid;
-}
-.alert-success { 
-  background: rgba(56, 142, 60, 0.1); 
-  color: #1a7f37; 
-  border-color: rgba(56, 142, 60, 0.3);
-}
-.alert-error { 
-  background: rgba(196, 30, 58, 0.1); 
-  color: #C41E3A; 
-  border-color: rgba(196, 30, 58, 0.3);
+.divider {
+    margin: 20px 0;
+    text-align: center;
+    color: var(--border-color);
+    position: relative;
 }
 
-/* Responsive */
+.divider::before,
+.divider::after {
+    content: "";
+    position: absolute;
+    height: 1px;
+    background: var(--border-color);
+    width: 40%;
+    top: 50%;
+}
+
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
 @media (max-width: 576px) {
-  .login-header h4, .register-header h4 { font-size: 1.4rem; }
-  .login-header p, .register-header p { font-size: 0.9rem; }
-  .tab-toggle { flex-direction: column; gap: 0.5rem; }
-}
+    .auth-card {
+        padding: 18px;
+    }
 
+    .auth-card h1 {
+        font-size: 20px;
+    }
+}
 

@@ -20,7 +20,7 @@ db.sqlite3
 media/
 staticfiles/
 static_root/
-static/
+
 *.pid
 
 # === Migrations (ignore all app migrations) ===

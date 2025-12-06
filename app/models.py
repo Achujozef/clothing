@@ -235,7 +235,8 @@ class Cart(models.Model):
         return total
 
     def item_count(self) -> int:
-        return self.items.aggregate(total=models.Sum("quantity"))["total"] or 0
+        # Return number of distinct line items, not total quantity
+        return self.items.count()
 
 
 class CartItem(models.Model):
