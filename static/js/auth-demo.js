@@ -18,10 +18,40 @@
         const otpInput = document.querySelector('[data-otp-code]');
         const statusBox = document.querySelector('[data-otp-status]');
 
-        if (!sendBtn || !verifyBtn || !otpInput) {
+        if (!verifyBtn || !otpInput) {
             console.warn('🎭 DEMO MODE: Required elements not found');
             return;
         }
+
+        // If on OTP verify page directly (no send button), auto-fill immediately
+        if (!sendBtn && otpInput && verifyBtn) {
+            console.log('🎭 DEMO MODE: OTP verify page detected, auto-filling...');
+            setTimeout(() => {
+                otpInput.value = '123456';
+                otpInput.dispatchEvent(new Event('input', { bubbles: true }));
+                otpInput.style.border = '2px solid #28a745';
+                
+                const demoMsg = document.createElement('div');
+                demoMsg.textContent = '🎭 DEMO: Auto-filled OTP (123456)';
+                demoMsg.style.cssText = `
+                    color: #28a745;
+                    font-size: 12px;
+                    margin-top: 8px;
+                    padding: 6px 12px;
+                    background: #e8f5e9;
+                    border-radius: 4px;
+                    font-weight: 600;
+                `;
+                otpInput.parentElement.appendChild(demoMsg);
+                
+                console.log('🎭 DEMO MODE: Ready to verify with 123456');
+            }, 500);
+            
+            // Continue with other setup
+        }
+
+        // Only set up MutationObserver if we have a send button (combined login page)
+        if (!sendBtn) return;
 
         // Create a MutationObserver to watch for status changes
         const observer = new MutationObserver((mutations) => {
@@ -86,9 +116,11 @@
         }
 
         // Also add a direct event listener as backup
-        sendBtn.addEventListener('click', () => {
-            console.log('🎭 DEMO MODE: Send OTP clicked, waiting for response...');
-        });
+        if (sendBtn) {
+            sendBtn.addEventListener('click', () => {
+                console.log('🎭 DEMO MODE: Send OTP clicked, waiting for response...');
+            });
+        }
 
         // Add visual indicator that demo mode is active
         const demoIndicator = document.createElement('div');
