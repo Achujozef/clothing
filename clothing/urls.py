@@ -21,8 +21,9 @@ from django.conf.urls.static import static
 from app.admin import custom_admin_site
 
 urlpatterns = [
-    path('admin/', custom_admin_site.urls),  # Use custom admin site
-    path('', include('app.urls')),  # Make sure you have app/urls.py
+    path('admin/', custom_admin_site.urls),  
+    path('', include('app.urls')),  
+    path('chatbot/', include('chatbot.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

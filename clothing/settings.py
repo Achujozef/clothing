@@ -29,6 +29,15 @@ ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
+CHATBOT_CONFIG = {
+    'RATE_LIMIT': 30,  # requests per minute
+    'SESSION_TIMEOUT': 3600,  # 1 hour
+    'MAX_MESSAGE_LENGTH': 1000,
+    'ENABLE_ANALYTICS': True,
+    'CACHE_SEARCH_RESULTS': True,
+    'CACHE_TIMEOUT': 300,  # 5 minutes
+}
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -47,6 +56,7 @@ INSTALLED_APPS = [
     
     # Local apps
     'app',
+    'chatbot',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +68,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'chatbot.advanced_features.RateLimitMiddleware',
 ]
 
 ROOT_URLCONF = 'clothing.urls'
@@ -208,3 +219,54 @@ CSRF_TRUSTED_ORIGINS = []  # Add your domain in production, e.g., ['https://your
 
 # Celery Configuration (for background tasks)
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 86400  # 24 hours
+SESSION_SAVE_EVERY_REQUEST = False
+
+# Cache configuration (recommended for production)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+        'KEY_PREFIX': 'chatbot',
+        'TIMEOUT': 300,
+    }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'chatbot_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'chatbot.log',
+            'maxBytes': 1024 * 1024 * 5,  # 5MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'chatbot': {
+            'handlers': ['chatbot_file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
