@@ -1,8 +1,10 @@
 # chatbot/services.py
 import re
+import uuid
 from decimal import Decimal
 from typing import Dict, List, Optional, Tuple
 from django.db.models import Q, Prefetch
+from django.core.exceptions import ValidationError
 from app.models import (
     Product, ProductVariant, Order, Category, 
     Inventory, Cart, CartItem
@@ -107,6 +109,15 @@ class OrderTrackingHandler:
         if order_id_match:
             order_id = order_id_match.group(0).replace('#', '').strip()
             try:
+                # Validate UUID format if full ID provided
+                if len(order_id) > 8:
+                    try:
+                        uuid_obj = uuid.UUID(order_id)
+                        order_id = str(uuid_obj)
+                    except ValueError:
+                        # If not a valid UUID, don't try to query
+                        pass
+
                 order = Order.objects.select_related('address').prefetch_related('items__variant__product').get(
                     Q(id=order_id) | Q(id__startswith=order_id[:8])
                 )
@@ -115,7 +126,7 @@ class OrderTrackingHandler:
                     return self._error_response("Order not found or unauthorized")
                 
                 return self._format_order_response(order)
-            except Order.DoesNotExist:
+            except (Order.DoesNotExist, ValidationError):
                 pass
         
         # Show recent orders
@@ -251,7 +262,11 @@ class ProductSearchHandler:
     
     def _extract_search_terms(self, message: str) -> List[str]:
         # Remove common words
-        stop_words = {'show', 'me', 'find', 'looking', 'for', 'want', 'to', 'buy', 'a', 'an', 'the', 'in', 'do', 'you', 'have'}
+        stop_words = {
+            'show', 'me', 'find', 'looking', 'for', 'want', 'to', 'buy', 
+            'a', 'an', 'the', 'in', 'do', 'you', 'have', 'are', 'is',
+            'size', 'color', 'price', 'cost', 'much', 'under', 'below', 'max', 'min'
+        }
         words = message.lower().split()
         return [w for w in words if w not in stop_words and len(w) > 2]
     

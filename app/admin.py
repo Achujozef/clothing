@@ -4,7 +4,7 @@ app/admin.py - Super User-Friendly Customized Admin Dashboard
 from django.contrib import admin, messages
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from django.db.models import Sum, Count, Q, Avg
+from django.db.models import Sum, Count, Q, Avg,F
 from django.urls import path, reverse
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -278,13 +278,16 @@ class SuperOrderAdmin(admin.ModelAdmin):
     
     def amount_display(self, obj):
         """Display amount with beautiful styling"""
+        total = Decimal(obj.total) if obj.total is not None else Decimal('0')
+        subtotal = Decimal(obj.subtotal) if obj.subtotal is not None else Decimal('0')
+        discount = Decimal(obj.discount_amount) if obj.discount_amount is not None else Decimal('0')
         return format_html(
             '<div style="text-align:center;">'
             '<div style="font-size:20px;font-weight:bold;color:#27ae60;">₹{:,.2f}</div>'
             '<small style="color:#7f8c8d;">Subtotal: ₹{:,.2f}</small><br>'
             '<small style="color:#e74c3c;">Discount: ₹{:,.2f}</small>'
             '</div>',
-            obj.total, obj.subtotal, obj.discount_amount
+            total, subtotal, discount
         )
     amount_display.short_description = '💰 Amount'
     

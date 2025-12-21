@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     # Local apps
     'app',
     'chatbot',
+    'admin_dashboard',
 ]
 
 MIDDLEWARE = [
@@ -226,17 +227,25 @@ SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = False
 
 # Cache configuration (recommended for production)
+# Using local memory cache for development. For production, use Redis.
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        },
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
         'KEY_PREFIX': 'chatbot',
         'TIMEOUT': 300,
     }
 }
+
+# Production Redis cache configuration (commented out)
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/1',
+#         'KEY_PREFIX': 'chatbot',
+#         'TIMEOUT': 300,
+#     }
+# }
 
 LOGGING = {
     'version': 1,
